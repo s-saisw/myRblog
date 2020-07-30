@@ -11,7 +11,7 @@
 
 
 
-<title>About this blog</title>
+<title>Probability Distributions in R</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -346,12 +346,30 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">About this blog</h1>
+<h1 class="title toc-ignore">Probability Distributions in R</h1>
 
 </div>
 
 
-<p>… Under Construction …</p>
+<p>Each distribution is indicated by a root name. e.g. root name for normal distribution is <em>norm</em>. Other root names are such as <em>binom</em>, <em>chisq</em>, <em>f</em>, <em>t</em>, <em>unif</em></p>
+<p>Every distribution has four functions - <em>p</em>: probability (cdf) - <em>q</em>: quantile (inverse cdf) - <em>d</em>: density (pdf) - <em>r</em>: random (random variable having the specified distribution)</p>
+<div id="generating-random-number" class="section level2">
+<h2>Generating Random Number</h2>
+<p>Suppose we want to draw 10 values of <span class="math inline">\(\epsilon\)</span> such that <span class="math inline">\(\epsilon\)</span> follows <span class="math inline">\(N(0,1)\)</span>.</p>
+<pre class="r"><code>rnorm(10, mean = 0, sd = 1) #default is mean = 0, sd = 1</code></pre>
+<pre><code>##  [1] -1.07333894  0.89801948  0.05346583 -0.46296898  0.80464173  0.55672911
+##  [7]  0.23441879 -0.01196460  0.94792154  0.25055736</code></pre>
+</div>
+<div id="cumulative-distribution-function" class="section level2">
+<h2>Cumulative distribution function</h2>
+<p>It is known that 95% of the area under the normal distribution lies within 1.96 standard deviations away from the mean. We can see this by plugging in the cumulative probability to function <em>q</em> of root <em>norm</em>.</p>
+<pre class="r"><code>c &lt;- qnorm(p = c(0.025,0.975))
+print(c)</code></pre>
+<pre><code>## [1] -1.959964  1.959964</code></pre>
+<p>We can confirm the cumulative probability of <em>c</em> by using function <em>p</em>.</p>
+<pre class="r"><code>pnorm(c)</code></pre>
+<pre><code>## [1] 0.025 0.975</code></pre>
+</div>
 
 
 

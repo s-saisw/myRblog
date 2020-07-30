@@ -9,20 +9,37 @@ navbar:
     - text: "Econometrics with R"
       menu:
         - text: "About"
+          href: metricswRabout.html
+        - text: "---------"
         - text: "Regression Analysis"
         - text: "Estimation"
         - text: "Hypothesis Testing"
         - text: "Dummy Variables"
-        - text: "Specification and Data Issues"
+          href: dummyvar.html
+        - text: "RESET"
+          href: reset.html
         - text: "---------"
         - text: "Advanced Topics"
         - text: "IV estimation"
+          href: ivreg.html
+        - text: "Sample Selection Correction"
+          href: heckit.html
         - text: "Regression Discontinuity"
+          href: rdd.html
         - text: "---------"
         - text: "Miscellaneous"
+        - text: "How to Use R and RStudio"
         - text: "Missing values"
           href: missingvalue.html
         - text: "Graphics"
+          href: graphics.html
+        - text: "Probability Distributions"
+          href: probdist.html
+    - text: "Random Stuff with R"
+      menu:
+        - text: "Sending Customized Mass E-mail"
+        - text: "Making ioslides with Rmd"
+        - text: "Publishing website with Rmd"
 output:
   html_document:
     theme: lumen

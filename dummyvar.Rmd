@@ -1,0 +1,144 @@
+---
+title: "Estimation with Dummy Independent Variables"
+---
+
+```{r, warning= FALSE, message= FALSE}
+library(tidyverse)
+```
+
+## Sample data
+
+```{r,echo=TRUE}
+UCBdata <- UCBAdmissions %>% as_tibble() #Little bit of cleaning
+head(UCBdata, 3)
+```
+
+Suppose we want to estimate 
+$$n = \beta_0 + \beta_1 Admit + \epsilon$$
+
+## Dummy variables in R
+There are many ways to estimate with dummy independent variables in R
+
+- Direct estimation with *character vector*
+  - Pro: easy to implement (if our data is similar to *UCBAdmissions* data)
+  - Con: difficult to change reference level
+  
+- Create *0-1 variable* for estimation
+  - Pro: we can manually specify the reference level 
+  - Con: cumbersome if we have many categories
+
+- Coerce the variable to a *factor*
+  - Pro: handle variables with many categories well (cf. fixed effects), can be used with numeric vectors
+  - Con: can be tricky to handle, change reference level
+
+## Estimation with Charactor Vectors
+
+```{r, echo=TRUE}
+lm(data = UCBdata,n ~ 1 + Admit)
+```
+
+The coefficient's name displayed in the console follows the format 'variable name' + 'level coded as 1'. Therefore, "AdmitRejected" implies that R has coded Rejected as 1 and Admitted as 0. 
+
+R decides which one is reference level by its alphabetical order.
+
+## Creating 0-1 variables using *ifelse()*
+
+We can also directly create a new dummy variable.
+
+```{r, echo=TRUE}
+UCBdata$admitDum <- ifelse(UCBdata$Admit == "Admitted", 1, 0)
+lm(data = UCBdata,n~1+admitDum)
+```
+
+This process can be cumbersome if we have many categories (cf. fixed effects) or many categorical variables. 
+
+## Creating 0-1 variables using *I()*
+
+```{r, echo=TRUE}
+I(UCBdata$Admit=="Admitted")
+lm(data = UCBdata,n~1+I(Admit=="Admitted"))
+```
+
+## Estimation with Integer and Numerical Vectors
+
+Let's use mtcars data set. Suppose we want to estimate 
+$$mpg = \alpha + \beta_1I(cyl=6) +\beta_2I(cyl=8) + \epsilon$$
+```{r}
+head(mtcars, 3)
+```
+
+The following code does not work. Why?
+```{r, echo=TRUE}
+lm(data = mtcars, mpg~1+cyl)
+```
+
+We may use I() function to do the job.
+
+```{r, echo=TRUE}
+lm(data = mtcars,mpg~1+I(cyl==6)+I(cyl==8))
+```
+
+However, if our variable contains many categories, this may be time-consuming. One easy fix is to coerce the variable into a factor.
+
+## Understanding Factors
+
+A factor looks like a vector, but it has special properties. R keeps track of the unique values in a vector, and each unique value is called a *level* of the associated factor.
+
+If we have a vector of strings or integers, we can create a categorical variable by using the command *factor()*.
+
+```{r, echo=TRUE}
+strVec <- c("Win", "Win", "Lose", "Tie", "Win", "Lose")
+f <- factor(strVec)
+f
+```
+
+Notice that when we printed the factor, f, R did not put quotes around the values. They are levels, not strings.
+
+R also displays the distinct levels below the factor.
+
+## Estimation with a Factor Variable
+
+Going back to the previous question, we can coerce cyl into a factor.
+
+```{r, echo=TRUE}
+lm(data = mtcars,mpg~1+factor(cyl))
+```
+
+This will be useful when we estimate models with many fixed effects.
+
+## Dummy Interaction Variables
+
+```{r, echo=TRUE}
+lm(data = mtcars, mpg~1+cyl*hp)
+```
+```{r, echo=TRUE}
+lm(data = mtcars, mpg~1+factor(cyl)*hp)
+```
+
+## Reordering Factor
+
+```{r, echo=TRUE}
+factor(mtcars$cyl)
+```
+
+Originally, 4-cylinder is the base case. Suppose, we prefer 8-cylinder cars to be the base case. We can reorder the factor with *fct_relevel* from the *forcats* package.
+
+```{r, echo=TRUE, warning=FALSE}
+library(forcats)
+cylf <- mtcars$cyl %>%
+  factor() %>%
+  fct_relevel(levels = "8") #specify the 1st level
+print(cylf)
+```
+
+Notice that the data order does not change. Therefore, we don't have to worry about rearranging other variables.
+
+## Estimation with a Releveled Factor
+
+Since the releveled factor was saved in new variable cylf, we need to estimate with the new variable instead.
+
+```{r, echo=TRUE}
+lm(mtcars$mpg~1+cylf)
+```
+
+Now 8-cylinder car has become the base case.

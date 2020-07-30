@@ -1,0 +1,34 @@
+---
+title: "Probability Distributions in R"
+---
+
+Each distribution is indicated by a root name. e.g. root name for normal distribution is *norm*. Other root names are such as *binom*, *chisq*, *f*, *t*, *unif*
+
+Every distribution has four functions
+  - *p*: probability (cdf)
+  - *q*: quantile (inverse cdf)
+  - *d*: density (pdf)
+  - *r*: random (random variable having the specified distribution)
+
+## Generating Random Number
+
+Suppose we want to draw 10 values of $\epsilon$ such that $\epsilon$ follows $N(0,1)$.
+
+```{r, echo=TRUE}
+rnorm(10, mean = 0, sd = 1) #default is mean = 0, sd = 1
+```
+
+## Cumulative distribution function
+
+It is known that 95% of the area under the normal distribution lies within 1.96 standard deviations away from the mean. We can see this by plugging in the cumulative probability to function *q* of root *norm*.
+
+```{r, echo=TRUE}
+c <- qnorm(p = c(0.025,0.975))
+print(c)
+```
+
+We can confirm the cumulative probability of *c* by using function *p*.
+
+```{r, echo=TRUE}
+pnorm(c)
+```

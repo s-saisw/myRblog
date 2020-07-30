@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Graphics</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 54px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h2 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h3 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h4 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h5 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h6 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Rblog</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Econometrics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="metricswRabout.html">About</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Regression Analysis</li>
+    <li class="dropdown-header">Estimation</li>
+    <li class="dropdown-header">Hypothesis Testing</li>
+    <li>
+      <a href="dummyvar.html">Dummy Variables</a>
+    </li>
+    <li>
+      <a href="reset.html">RESET</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Advanced Topics</li>
+    <li>
+      <a href="ivreg.html">IV estimation</a>
+    </li>
+    <li>
+      <a href="heckit.html">Sample Selection Correction</a>
+    </li>
+    <li>
+      <a href="rdd.html">Regression Discontinuity</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Miscellaneous</li>
+    <li class="dropdown-header">How to Use R and RStudio</li>
+    <li>
+      <a href="missingvalue.html">Missing values</a>
+    </li>
+    <li>
+      <a href="graphics.html">Graphics</a>
+    </li>
+    <li>
+      <a href="probdist.html">Probability Distributions</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Random Stuff with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Sending Customized Mass E-mail</li>
+    <li class="dropdown-header">Making ioslides with Rmd</li>
+    <li class="dropdown-header">Publishing website with Rmd</li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Graphics</h1>
+
+</div>
+
+
+<p>We can visualize data in R using the graphics package. Graphics package is part of the standard distribution so there is no need to install or load it to the session.</p>
+<p>Contents here are based on “R cookbook: Proven recipes for data analysis, statistics, and graphics” by Paul Teetor (2011).</p>
+<p>There are many other packages we can use. For example, ggplot2, the so-called “Grammar of Graphics”. It is said to be easier to construct and customize plots and the graphics are generelly more attractive. For more information on how to use ggplot2, see <a href="https://rc2e.com/graphics" class="uri">https://rc2e.com/graphics</a>.</p>
+<div id="notes-on-graphics-functions" class="section level2">
+<h2>Notes on Graphics Functions</h2>
+<p>There are two levels of graphics function.</p>
+<ul>
+<li><em>High-level</em> graphics function
+<ul>
+<li>It starts a new graph, sets the scale, draws some adornment, and renders the graphic.</li>
+<li>Examples include: plot(), boxplot(), hist(), qqnorm(), curve()</li>
+</ul></li>
+<li><em>Low-level</em> graphics function
+<ul>
+<li>It adds something to an existing graph e.g. points, lines, text, adornments.</li>
+<li>Examples include: points(), lines(), abline(), segments(), polygon(), text()</li>
+</ul></li>
+</ul>
+</div>
+<div id="creating-a-scatterplot" class="section level2">
+<h2>Creating a Scatterplot</h2>
+<p>Scatter plot is a quick way to see the relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>.</p>
+<pre class="r"><code>plot(cars$speed, cars$dist)</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>If the data set contains only two columns, it is even easier.</p>
+<pre class="r"><code>plot(cars)</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Note that the axis label changed.</p>
+</div>
+<div id="adding-a-title-and-labels" class="section level2">
+<h2>Adding a Title and Labels</h2>
+<p>Now we want to specify a title to the plot and add labels for the axes.</p>
+<pre class="r"><code>plot(cars,
+     main = &quot;Speed VS Stopping distance (1920)&quot;,
+     xlab = &quot;Speed (mph)&quot;,
+     ylab = &quot;Stopping Distance (ft)&quot;)</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="creating-a-scatter-plot-for-multiple-groups" class="section level2">
+<h2>Creating a Scatter Plot for Multiple Groups</h2>
+<p>If we want to distinguish one group from another, we may plot multiple groups in one scatter plot. Let’s do this using iris data set.</p>
+<pre class="r"><code>head(iris)</code></pre>
+<pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+## 1          5.1         3.5          1.4         0.2  setosa
+## 2          4.9         3.0          1.4         0.2  setosa
+## 3          4.7         3.2          1.3         0.2  setosa
+## 4          4.6         3.1          1.5         0.2  setosa
+## 5          5.0         3.6          1.4         0.2  setosa
+## 6          5.4         3.9          1.7         0.4  setosa</code></pre>
+<pre class="r"><code>plot(iris$Petal.Length, iris$Petal.Width)</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We can add identifier to the groups using <em>pch</em> argument.</p>
+<pre class="r"><code>plot(iris$Petal.Length, iris$Petal.Width,
+     pch = as.integer(iris$Species)) #Besides pch, you may use col</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We can also modify the point types.</p>
+<pre class="r"><code>symbol &lt;- c(0,15,25)
+pointVec &lt;- symbol[as.integer(iris$Species)]
+
+plot(iris$Petal.Length, iris$Petal.Width,
+     pch = pointVec)</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="adding-a-legend" class="section level2">
+<h2>Adding a Legend</h2>
+<p><em>legend()</em> is one of the low-level graphic functions. Therefore, we need to call <em>legend()</em> after calling <em>plot()</em>.</p>
+<pre class="r"><code>plot(iris$Petal.Length, iris$Petal.Width,
+     pch = as.integer(iris$Species))
+legend(1, 2.5, #Coordinates of the legend box
+       c(&quot;Setosa&quot;, &quot;Versicolor&quot;, &quot;Virginica&quot;), #labels
+       pch = 1:3) #must be consistent with the argument in plot()</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="plotting-regression-line" class="section level2">
+<h2>Plotting regression line</h2>
+<p>We want to add a line that illustrates linear regrssion of data points. abline() is also a low-level graphic function.</p>
+<pre class="r"><code>m &lt;- lm(data = cars, dist ~ 1 + speed)
+plot(cars, main = &quot;Speed VS Stopping distance (1920)&quot;, 
+     xlab = &quot;Speed (mph)&quot;, 
+     ylab = &quot;Stopping Distance (ft)&quot;)
+abline(m)</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="creating-a-histogram" class="section level2">
+<h2>Creating a histogram</h2>
+<p>We may plot histogram of numeric values. Suppose we want to plot a t-distribution with degree of freedom 25.</p>
+<pre class="r"><code>set.seed(2020) #set seed to ensure each draw yields the same numbers
+samp &lt;- rt(1000,25) #draw 1000 obs from t distribution with df=25 
+hist(samp)</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We may suggest the number of bins by including a second argument in hist().</p>
+<pre class="r"><code>hist(samp, 50, 
+     xlab = &quot;samp&quot;, main = &quot;Histogram of samp&quot;)</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We may add a density estimate to a histogram with line()</p>
+<pre class="r"><code>hist(samp, 50, 
+     xlab = &quot;samp&quot;, main = &quot;Histogram of samp&quot;,
+     ### &lt;b&gt;
+     prob = T)
+lines(density(samp)) #density() computes kernel density</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>### &lt;/b&gt;</code></pre>
+</div>
+<div id="writing-your-plot-to-a-file" class="section level2">
+<h2>Writing your plot to a file</h2>
+<p>Saving your plot involves three steps</p>
+<ol style="list-style-type: decimal">
+<li>Call a function to open a new graphic file, e.g. png(), jpeg(), pdf()</li>
+<li>Call plot and its friends to generate the graphics image.</li>
+<li>Call dev.off to close the graphics file.</li>
+</ol>
+<p>The file will be written to your current working directory.</p>
+<pre class="r"><code>pdf(&quot;samp.pdf&quot;)
+hist(samp, 20, prob = T)
+lines(density(samp))
+dev.off()</code></pre>
+</div>
+<div id="best-practices-for-data-visualization" class="section level2">
+<h2>Best Practices for Data Visualization</h2>
+<ul>
+<li>Everything on your graph should be labeled.
+<ul>
+<li>The title should be short and clear.</li>
+<li>Each axis must be labeled. Unit of measurement should be included. - The legend must be short and informative e.g. Male and Female, not 0 and 1</li>
+</ul></li>
+<li>Be minimal. Don’t include elements that are not necessary.
+<ul>
+<li>e.g. 3-D effect, background color</li>
+</ul></li>
+<li>Choose color schemes carefully.
+<ul>
+<li>sequential - for plotting a quantitative variable that goes from low to high</li>
+<li>diverging - for contrasting the extremes (low, medium, and high) of a quantitative variable</li>
+<li>qualitative - for distinguishing among the levels of a categorical variable</li>
+<li><em>RColorBrewer</em> is a useful package for color schemes</li>
+</ul></li>
+</ul>
+</div>
+<div id="font-issue-in-plot" class="section level2">
+<h2>Font Issue in <em>plot()</em></h2>
+<p>Mac users may have encountered this warning message: no font could be found for family “Arial” when using plot().</p>
+<p>You may solve it by doing the following: 1. Go to Finder. 2. Search for “Font Book” and open it. 3. Look for the Arial font and, if it is grayed out, turn it on.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -2,5 +2,4 @@
 title: "My Rblog"
 ---
 
-Hey
-
+Welcome to my R blog. Here I blog about what I have learned during my journey with R. [Visit my personal website ...](https://s-saisw.github.io/)
