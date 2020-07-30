@@ -1,12 +1,21 @@
-name: "cars"
-output_dir: "docs"
+name: "my-website"
 navbar:
-  title: "Cars"
+  title: "My Rblog"
   left:
-  - text: "Home"
-   href: index.html
-  - text: "Speed and Distance"
-   href: first-try.html
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html
+    - text: "More"
+      menu:
+        - text: "Heading 1"
+        - text: "Page A"
+          href: about.html
+        - text: "Page B"
+          href: about.html
+        - text: "---------"
+        - text: "Heading 2"
 output:
   html_document:
- theme: cosmo
+    theme: lumen
+    highlight: textmate

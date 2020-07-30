@@ -1,0 +1,8 @@
+---
+title: "Cars"
+---
+
+```{r cars}
+summary(cars)
+```
+
