@@ -1,0 +1,83 @@
+---
+title: "Missing Values"
+---
+
+- In R, missing values are represented by the symbol NA (not available). Impossible values (e.g., dividing by zero) are represented by the symbol NaN (not a number).
+
+- *lm()* command automatically omits missing values. (cf. HW4) This is problematic.
+
+- To avoid this, we may remove rows that contain any NA values using *na.omit()*. 
+
+- However, *na.omit()* may discard more rows than necessary. 
+  - Suppose we have a data frame that contains $x,y,$ and $z$. 
+  - We want to regress $y$ on $x$ but $z$ has some missing values. 
+  - If we use na.omit() directly on that data frame, we will end up with fewer observations.
+
+- Carefully examine data before dropping any observations. Make sure that omitting data makes sense in your context.
+
+## Counting NAs
+
+- is.na() returns TRUE if that element is missing.
+
+```{r, echo=TRUE}
+x <- c(1,2,3,NA,5)
+y <- is.na(x)
+print(y)
+```
+
+- Logical values i.e. TRUE or FALSE can be treated as numerical values i.e. 1 or 0.
+
+```{r,echo = TRUE}
+sum(y)
+```
+
+- This means we can count the number of missing values in a dataframe using the combination of *is.na()* and *sum()*.
+
+```{r, echo=TRUE, message = FALSE, warning= FALSE}
+library(wooldridge)
+library(tidyverse)
+var <- list(discrim$psoda, discrim$prpblck, discrim$income)
+
+for (i in 1:length(var)) {
+  var[[i]] %>%
+    is.na() %>% 
+    sum() %>% #Summing logical values
+    print()
+}
+```
+
+- There are eight NAs in $psoda$, one in $prpblck$ and one in $income$.
+
+## Find rows with NAs
+
+- We want to extract the index of rows with missing value(s)
+
+- Combine *is.na()* with *which()*
+
+```{r, echo=TRUE}
+for (i in 1:length(var)) {
+  which(is.na(var[[i]])==TRUE) %>% print()
+}
+```
+
+- If we use na.omit() on this data frame, we will discard 9 rows.
+
+## Removing NAs from a Data Frame
+
+- Before removing those rows, let's check the number of rows in our data frame.
+
+```{r, echo=TRUE}
+rawdata <- discrim %>%
+  select(psoda, prpblck, income)
+
+nrow(rawdata)
+```
+
+- After removing the rows with missing values, confirm the result using *nrow()* again.
+
+```{r, echo=TRUE}
+cleandata <- na.omit(rawdata)
+nrow(cleandata)
+```
+
+- We have successfully discarded 9 rows.

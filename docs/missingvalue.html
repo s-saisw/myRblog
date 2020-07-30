@@ -11,7 +11,7 @@
 
 
 
-<title>First try</title>
+<title>Missing Values</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -279,20 +279,27 @@ $(document).ready(function () {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    More
+    Econometrics with R
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Heading 1</li>
-    <li>
-      <a href="about.html">Page A</a>
-    </li>
-    <li>
-      <a href="about.html">Page B</a>
-    </li>
+    <li class="dropdown-header">About</li>
+    <li class="dropdown-header">Regression Analysis</li>
+    <li class="dropdown-header">Estimation</li>
+    <li class="dropdown-header">Hypothesis Testing</li>
+    <li class="dropdown-header">Dummy Variables</li>
+    <li class="dropdown-header">Specification and Data Issues</li>
     <li class="divider"></li>
-    <li class="dropdown-header">Heading 2</li>
+    <li class="dropdown-header">Advanced Topics</li>
+    <li class="dropdown-header">IV estimation</li>
+    <li class="dropdown-header">Regression Discontinuity</li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Miscellaneous</li>
+    <li>
+      <a href="missingvalue.html">Missing values</a>
+    </li>
+    <li class="dropdown-header">Graphics</li>
   </ul>
 </li>
       </ul>
@@ -307,29 +314,92 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">First try</h1>
+<h1 class="title toc-ignore">Missing Values</h1>
 
 </div>
 
 
-<div id="r-markdown" class="section level2">
-<h2>R Markdown</h2>
-<p>This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <a href="http://rmarkdown.rstudio.com" class="uri">http://rmarkdown.rstudio.com</a>.</p>
-<p>When you click the <strong>Knit</strong> button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:</p>
-<pre class="r"><code>summary(cars)</code></pre>
-<pre><code>##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00</code></pre>
+<ul>
+<li><p>In R, missing values are represented by the symbol NA (not available). Impossible values (e.g., dividing by zero) are represented by the symbol NaN (not a number).</p></li>
+<li><p><em>lm()</em> command automatically omits missing values. (cf. HW4) This is problematic.</p></li>
+<li><p>To avoid this, we may remove rows that contain any NA values using <em>na.omit()</em>.</p></li>
+<li><p>However, <em>na.omit()</em> may discard more rows than necessary.</p>
+<ul>
+<li>Suppose we have a data frame that contains <span class="math inline">\(x,y,\)</span> and <span class="math inline">\(z\)</span>.</li>
+<li>We want to regress <span class="math inline">\(y\)</span> on <span class="math inline">\(x\)</span> but <span class="math inline">\(z\)</span> has some missing values.</li>
+<li>If we use na.omit() directly on that data frame, we will end up with fewer observations.</li>
+</ul></li>
+<li><p>Carefully examine data before dropping any observations. Make sure that omitting data makes sense in your context.</p></li>
+</ul>
+<div id="counting-nas" class="section level2">
+<h2>Counting NAs</h2>
+<ul>
+<li>is.na() returns TRUE if that element is missing.</li>
+</ul>
+<pre class="r"><code>x &lt;- c(1,2,3,NA,5)
+y &lt;- is.na(x)
+print(y)</code></pre>
+<pre><code>## [1] FALSE FALSE FALSE  TRUE FALSE</code></pre>
+<ul>
+<li>Logical values i.e. TRUE or FALSE can be treated as numerical values i.e. 1 or 0.</li>
+</ul>
+<pre class="r"><code>sum(y)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<ul>
+<li>This means we can count the number of missing values in a dataframe using the combination of <em>is.na()</em> and <em>sum()</em>.</li>
+</ul>
+<pre class="r"><code>library(wooldridge)
+library(tidyverse)
+var &lt;- list(discrim$psoda, discrim$prpblck, discrim$income)
+
+for (i in 1:length(var)) {
+  var[[i]] %&gt;%
+    is.na() %&gt;% 
+    sum() %&gt;% #Summing logical values
+    print()
+}</code></pre>
+<pre><code>## [1] 8
+## [1] 1
+## [1] 1</code></pre>
+<ul>
+<li>There are eight NAs in <span class="math inline">\(psoda\)</span>, one in <span class="math inline">\(prpblck\)</span> and one in <span class="math inline">\(income\)</span>.</li>
+</ul>
 </div>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><img src="first-try_files/figure-html/pressure-1.png" width="672" /></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+<div id="find-rows-with-nas" class="section level2">
+<h2>Find rows with NAs</h2>
+<ul>
+<li><p>We want to extract the index of rows with missing value(s)</p></li>
+<li><p>Combine <em>is.na()</em> with <em>which()</em></p></li>
+</ul>
+<pre class="r"><code>for (i in 1:length(var)) {
+  which(is.na(var[[i]])==TRUE) %&gt;% print()
+}</code></pre>
+<pre><code>## [1]  58  93 144 184 284 311 362 369
+## [1] 385
+## [1] 385</code></pre>
+<ul>
+<li>If we use na.omit() on this data frame, we will discard 9 rows.</li>
+</ul>
+</div>
+<div id="removing-nas-from-a-data-frame" class="section level2">
+<h2>Removing NAs from a Data Frame</h2>
+<ul>
+<li>Before removing those rows, let’s check the number of rows in our data frame.</li>
+</ul>
+<pre class="r"><code>rawdata &lt;- discrim %&gt;%
+  select(psoda, prpblck, income)
+
+nrow(rawdata)</code></pre>
+<pre><code>## [1] 410</code></pre>
+<ul>
+<li>After removing the rows with missing values, confirm the result using <em>nrow()</em> again.</li>
+</ul>
+<pre class="r"><code>cleandata &lt;- na.omit(rawdata)
+nrow(cleandata)</code></pre>
+<pre><code>## [1] 401</code></pre>
+<ul>
+<li>We have successfully discarded 9 rows.</li>
+</ul>
 </div>
 
 

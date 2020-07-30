@@ -6,15 +6,23 @@ navbar:
       href: index.html
     - text: "About"
       href: about.html
-    - text: "More"
+    - text: "Econometrics with R"
       menu:
-        - text: "Heading 1"
-        - text: "Page A"
-          href: about.html
-        - text: "Page B"
-          href: about.html
+        - text: "About"
+        - text: "Regression Analysis"
+        - text: "Estimation"
+        - text: "Hypothesis Testing"
+        - text: "Dummy Variables"
+        - text: "Specification and Data Issues"
         - text: "---------"
-        - text: "Heading 2"
+        - text: "Advanced Topics"
+        - text: "IV estimation"
+        - text: "Regression Discontinuity"
+        - text: "---------"
+        - text: "Miscellaneous"
+        - text: "Missing values"
+          href: missingvalue.html
+        - text: "Graphics"
 output:
   html_document:
     theme: lumen
