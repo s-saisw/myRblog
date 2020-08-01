@@ -39,7 +39,11 @@ navbar:
       menu:
         - text: "Sending Customized Mass E-mail"
         - text: "Making ioslides with Rmd"
-        - text: "Publishing website with Rmd"
+  right:
+    - icon: fa-github
+      href: https://github.com/s-saisw
+    - icon: fa-id-card
+      href: https://s-saisw.github.io/
 output:
   html_document:
     theme: lumen

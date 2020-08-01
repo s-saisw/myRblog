@@ -16,15 +16,13 @@ We can show that
 $$E(y|\mathbf{z},s=1) = \mathbf{x}\beta + \rho\lambda(\mathbf{z\gamma}),$$
 where $\lambda(\mathbf{z\gamma})$ is the inverse Mills ratio.
 
-This equation means we can estimate $\beta$ using only the selected sample if we include $\lambda(\mathbf{z\gamma})$ as an additional regressor.
-
-## Steps for Heckit:
+This equation means we can estimate $\beta$ using only the selected sample if we include $\lambda(\mathbf{z\gamma})$ as an additional regressor. This means we can correct for sample selection in two steps:
 
 1. Using all observations, estimate a probit model of $s_i$ on $\mathbf{z}_i$ and obtain the estimates $\mathbf{\hat{\gamma}}$. Compute the inverse Mills ratio $\hat{\lambda}_i = \lambda(\mathbf{z_i\hat{\gamma}}) = \phi(\mathbf{z_i\hat{\gamma}})/\Phi(\mathbf{z_i\hat{\gamma}})$ for each $i$. 
 
 2. Using the selected sample, i.e. the observations for which $s_i = 1$, run the regression of $y_i$ on $\mathbf{x}_i$ and $\hat{\lambda}_i$. Obtain $\mathbf{\hat{\beta}}$.
 
-## Computer Exercise 17.7
+## Heckit by Hand: Computer Exercise 17.7
 
 1. Use the *mroz* data for this exercise. Using the 428 women who were in the workforce, regress $\log(wage)$ on $educ$ using OLS. Include $exper$, $exper^2$, $nwifeinc$, $age$, $kidslt6$, and $kidsge6$ as explanatory variables. Report your estimate on educ and its standard error.
 
@@ -59,7 +57,7 @@ step2 <- lm(data = mroz[mroz$s==1,],
 ```
 
 ```{r}
-coefficients(summary(step2))[,1:3]
+summary(step2)
 ```
 
 After sample selection correction, the return to education becomes larger but standard error is twice as large.
@@ -91,6 +89,33 @@ summary(mroz.heckit)
 The estimates are the same as the ones we obtained from doing heckit by hand.
 
 ## Issues about Inverse Mill's Ratio
-There are several definitions of Inverse Mill's ratio. However, in the context of Heckit, we need to use the following definition:
+There are several definitions of Inverse Mill's ratio. For example, the ones listed on [this forum](https://www.stata.com/support/faqs/statistics/inverse-mills-ratio/). However, in the context of Heckit, we need to use the following definition:
 
 $$\hat{\lambda}_i = \lambda(\mathbf{z_i\hat{\gamma}}) = \phi(\mathbf{z_i\hat{\gamma}})/\Phi(\mathbf{z_i\hat{\gamma}})$$ 
+
+Proof: Suppose our original model is $y = X\beta + u$ and selection process is $s = \mathcal{1}[\mathbf{z\gamma} + v \ge 0]$. Then,
+
+$$
+\begin{aligned}
+ E(y_i | s_i = 1, z_i) &=  E[X_i \beta + u_i|s_i = 1, z_i]\\
+ &= E[X_i \beta + u_i| v_i \ge -\mathbf{z_i\gamma}] \\
+ &= X_i \beta + E[u_i| v_i \ge -\mathbf{z_i\gamma}]
+\end{aligned}
+$$
+
+Let $\epsilon_i$ be the residual from regressing $u$ on $v$. Then $\epsilon_i = u_i - \rho v_i$ and $E(\epsilon)= 0$ and $Cov(v_i,\epsilon_i)=0$.
+
+Therefore, 
+
+$$
+\begin{aligned}
+ E[u_i| v_i \ge -\mathbf{z_i\gamma}] &= 
+ E[\epsilon_i +\rho v_i| v_i \ge -\mathbf{z_i\gamma}] \\
+ &= E[\epsilon_i | v_i \ge -\mathbf{z_i\gamma}] +
+ E[\rho v_i| v_i \ge -\mathbf{z_i\gamma}]\\
+&= 0 + \rho E[v_i| v_i \ge -\mathbf{z_i\gamma}] \\
+&= \rho E[v_i| v_i \ge -\mathbf{z_i\gamma}] \\
+&=\rho\frac{\phi(\mathbf{-z_i\gamma})}{1-\Phi(\mathbf{-z_i\gamma})} \\
+&=\rho\frac{\phi(\mathbf{z_i\gamma})}{\Phi(\mathbf{z_i\gamma})}
+\end{aligned} 
+$$
