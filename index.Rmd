@@ -1,5 +1,9 @@
 ---
-title: "My Rblog"
+title: "About"
 ---
 
-Welcome to my R blog. Here I blog about what I have learned during my journey with R. [Visit my personal website ...](https://s-saisw.github.io/)
+Materials here are adapted from the slides I used while TA'ing for Practice Session for Econometrics for Public Policy class (S2020) at the Graduate School of Public Policy, UTokyo. The class roughly follows Wooldridge's *Introductory Economics - A Modern Approach* and Angrist and Pischke's *Mastering 'Metrics: The Path from Cause to Effect*.
+
+Most of data sets used here are taken from ```wooldridge``` package.
+
+This website is still an ongoing project. Comments are welcomed.

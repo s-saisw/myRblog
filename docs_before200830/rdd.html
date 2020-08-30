@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Regression Discontinuity Design</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 54px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h2 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h3 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h4 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h5 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h6 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Rblog</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Econometrics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="metricswRabout.html">About</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Regression Analysis</li>
+    <li class="dropdown-header">Estimation</li>
+    <li class="dropdown-header">Hypothesis Testing</li>
+    <li>
+      <a href="dummyvar.html">Dummy Variables</a>
+    </li>
+    <li>
+      <a href="reset.html">RESET</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Advanced Topics</li>
+    <li>
+      <a href="ivreg.html">IV estimation</a>
+    </li>
+    <li>
+      <a href="heckit.html">Sample Selection Correction</a>
+    </li>
+    <li>
+      <a href="rdd.html">Regression Discontinuity</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Miscellaneous</li>
+    <li class="dropdown-header">How to Use R and RStudio</li>
+    <li>
+      <a href="missingvalue.html">Missing values</a>
+    </li>
+    <li>
+      <a href="graphics.html">Graphics</a>
+    </li>
+    <li>
+      <a href="probdist.html">Probability Distributions</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Random Stuff with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Sending Customized Mass E-mail</li>
+    <li class="dropdown-header">Making ioslides with Rmd</li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/s-saisw">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://s-saisw.github.io/">
+    <span class="fa fa-id-card"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Regression Discontinuity Design</h1>
+
+</div>
+
+
+<p>RD is based on the seemingly paradoxical idea that rigid rules create valuable experiments.</p>
+<p>There are two distinct features of RDD. When <span class="math inline">\(a\)</span> is our running variable, first, treatment status is deterministic of <span class="math inline">\(a\)</span> and second, Treatment status is a discontinuous function of <span class="math inline">\(a\)</span>.</p>
+<p>There are two types of RDD: First, Sharp RDD - Treatment cleanly switches on or off once running variable passes threshold. Second, Fuzzy RDD - Probability or intensity of treatment jumps at a cutoff.</p>
+<div id="summary-of-meyersson-2014" class="section level2">
+<h2>Summary of Meyersson (2014)</h2>
+<div id="islamic-rule-and-the-empowerment-of-the-poor-and-pious" class="section level3">
+<h3>Islamic Rule and the Empowerment of the Poor and Pious</h3>
+<p>Several countries have experienced Islamic political parties coming to power through democratic elections. This paper examines whether democratically elected Islamic polticians lead to worsened women’s rights.</p>
+<p>This study implements RDD to answer this question using data from Turkey. Short answer is No! Islamic rule increases female secular high school education.</p>
+<p>Turkey was founded as a secular republic but the influence of Islam in politics has increased substantially over the years. Secular education was viewed as a fundamental step toward modernization. Secular education includes mixed-sex education and banning of wearing religious symbols in school e.g. headscarf for women</p>
+<p>In 1994, the pro-Islamic <em>Refah</em> Party became the second largest party in terms of votes. This brought about an unprecendented representation of Islamic political party and education facilities tailored to religious conservatives</p>
+</div>
+<div id="challenge-in-identification" class="section level3">
+<h3>Challenge in Identification</h3>
+<p>Comparing between municipalities with an Islamic or secular mayor is not sufficient since assignment of mayor type is non-random. For example, municipalities more likely to elect an Islamic mayor may have some unobserved characteristics that also influence female enrollment.</p>
+<p>RDD can help. Assignment of treatment (i.e. mayor type) is determined solely on the basis of a cutoff score on an observed running variable (i.e. win margin for the Islamic party relative to the largest non-Islamic party). In a narrow range, treatment is assigned almost randomly.</p>
+</div>
+<div id="methodology" class="section level3">
+<h3>Methodology</h3>
+<p>This study combines 1994 election data and 2000 census data at municipality level. Using RDD, it compares education outcomes where an Islamic mayor barely won or lost the election.</p>
+<p><span class="math display">\[
+y_i = \alpha + \beta m_i + f(x_i)+\epsilon_i,
+\]</span> where <span class="math inline">\(m_i = 1\{x_i\geq c\}\)</span>.</p>
+<p>It also conducts RD validity checks: whether density of running variable is continuous at discontinuity and whether control variables jump at the cutoff.</p>
+</div>
+<div id="results-discussion" class="section level3">
+<h3>Results &amp; Discussion</h3>
+<p>Having an Islamic mayor increases female enrollment by 3 percentage points. Effects for men are smaller and imprecise. This result contradicts a commonly-held belief that religious state leads to worsened women’s rights.</p>
+<p>In religiously conservative communities, the headscarf ban, mixed-sex classes, and a secular curriculum create barriers to enroll in school for religious women. Islamic parties overcome these barriers by allowing headscarfs and creating facilities more amenable to religious conservatives.</p>
+</div>
+</div>
+<div id="replication" class="section level2">
+<h2>Replication</h2>
+<div id="download-replication-data" class="section level3">
+<h3>Download replication data</h3>
+<p>Visit <a href="https://erikmeyersson.com/research/" class="uri">https://erikmeyersson.com/research/</a> <span class="math inline">\(\rightarrow\)</span> Publications <span class="math inline">\(\rightarrow\)</span> “Islamic Rule and the Empowerment of the Poor and Pious” <span class="math inline">\(\rightarrow\)</span> STATA replication files and load <em>regdata0.dta</em> to R working environment.</p>
+<pre class="r"><code>library(haven) #import dta data
+library(tidyverse)
+data &lt;- read_dta(&quot;regdata0.dta&quot;) %&gt;%
+  select(hischshr1520f, hischshr1520m,
+         i94, vi1, vshr_islam1994, partycount, lpop1994,
+         ageshr19, ageshr60, sexr, shhs, 
+         merkezi, merkezp,buyuk,subbuyuk,
+         starts_with(&quot;pd_&quot;)) %&gt;%
+         na.omit() #2629 observations</code></pre>
+</div>
+<div id="variable-explanation" class="section level3">
+<h3>Variable explanation</h3>
+<ul>
+<li>hischshr1520f : Share women age 15-20 with high school education</li>
+<li>hischshr1520m : Share men age 15-20 with high school education</li>
+<li>i94 : Islamic mayor in 1994</li>
+<li>vi1 : Islamic win margin</li>
+<li>vshr_islam1994 : Islamic wote share 1994</li>
+<li>partycount : Number of parties receiving votes 1994</li>
+<li>lpop1994 : Log population 1994</li>
+<li>ageshr19 : Population share below 19 in 1994</li>
+<li>ageshr60 : Population share above 19 in 1994</li>
+<li>sexr : Gender ratio in 2000</li>
+<li>shhs : Household size in 2000</li>
+<li>merkezi : District center dummy</li>
+<li>merkezp : Province center dummy</li>
+<li>buyuk : Metropolitan center dummy</li>
+<li>subbuyuk : Sub-metro center dummy</li>
+</ul>
+</div>
+<div id="ols-specifications" class="section level3">
+<h3>OLS specifications</h3>
+<pre class="r"><code>ols &lt;- lm(data = data,
+          hischshr1520f~vi1)
+coefficients(summary(ols))[,1:3]</code></pre>
+<pre><code>##                Estimate  Std. Error   t value
+## (Intercept)  0.15302526 0.003015656 50.743599
+## vi1         -0.03565611 0.008426467 -4.231442</code></pre>
+<p>Estimation with OLS yields negative estimates, meaning that <em>globally</em>, Islamic rule lowers female high school enrollment.</p>
+<p>However, note that mayor type is not exogenously determined. We can improve this using RDD.</p>
+</div>
+<div id="rd-validity-checks" class="section level3">
+<h3>RD Validity Checks</h3>
+<p>First check whether there is positive density around cutoff.</p>
+<pre class="r"><code>hist(data$vi1, 100, main = &quot;Histogram of Islamic win margin&quot;, 
+     probability = TRUE) 
+abline(v=0, col = &quot;blue&quot;)</code></pre>
+<p><img src="rdd_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Next, check whether there is a jump in control variables.</p>
+<pre class="r"><code>library(rdrobust)
+rdplot(data$vshr_islam1994, data$vi1,
+       ci = 95, # confidence interval
+       nbins = c(40,40), #number of dots on each side
+       binselect = &quot;es&quot;, #bins are evenly spaced
+       x.lim = c(-0.25, 0.25),
+       y.label = &quot;Islamic vote share&quot;,
+       x.label = &quot;Islamic win margin&quot;)</code></pre>
+<p><img src="rdd_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Repeat the exercise for all covariates.</p>
+<pre class="r"><code>control &lt;- list(data$vshr_islam1994, data$ageshr19, 
+                data$sexr, data$partycount,
+                data$ageshr60, data$lpop1994,
+                data$merkezi, data$shhs)
+varname &lt;- c(&quot;Islamic vote share&quot;,&quot;Age 19-&quot;,&quot;Gender&quot;,
+             &quot;Number of parties&quot;,&quot;Age 16+&quot;,&quot;Log population&quot;,
+             &quot;District Center&quot;,&quot;Household size&quot;)
+
+for (i in 1:length(control)) {
+  rdplot(control[[i]], data$vi1,
+         ci = 95, # confidence interval
+         nbins = c(40,40), #number of dots on each side
+         binselect = &quot;es&quot;, #bins are evenly spaced
+         x.lim = c(-0.25, 0.25),
+         y.label = varname[i], x.label = &quot;Islamic win margin&quot;)
+}</code></pre>
+</div>
+<div id="graphical-illustration-of-rdd" class="section level3">
+<h3>Graphical Illustration of RDD</h3>
+<pre class="r"><code>rdplot(data$hischshr1520f, data$vi1, 
+       ci = 95,nbins = c(20,20),binselect = &quot;es&quot;, 
+       y.lim = c(0,0.25),x.lim = c(-0.5, 0.5),
+       y.label = &quot;Share of 15-20 year-old women with high school degree&quot;,
+       x.label = &quot;Islamic win margin&quot;)</code></pre>
+<p><img src="rdd_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code>rdplot(data$hischshr1520m, data$vi1, ci = 95,nbins = c(20,20),
+       binselect = &quot;es&quot;, y.lim = c(0,0.25),x.lim = c(-0.5, 0.5),
+       y.label = &quot;Share of 15-20 year-old men with high school degree&quot;,
+       x.label = &quot;Islamic win margin&quot;)</code></pre>
+<p><img src="rdd_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="bandwith-selection" class="section level3">
+<h3>Bandwith selection</h3>
+<p>We need to choose how many observations to include in the regression. Optimal bandwidth used in this study is the one calculated from Imbens and Kalyanaraman (2012) algorithm.</p>
+<pre class="r"><code>library(rdd)
+band &lt;- IKbandwidth(data$vi1, data$hischshr1520f)
+band</code></pre>
+<pre><code>## [1] 0.2397612</code></pre>
+</div>
+<div id="rdd-estimation-without-covariates" class="section level3">
+<h3>RDD Estimation without Covariates</h3>
+<pre class="r"><code>rd_est &lt;- RDestimate(hischshr1520f~vi1,cutpoint=0,bw=band, data=data)
+summary(rd_est)</code></pre>
+<pre><code>## 
+## Call:
+## RDestimate(formula = hischshr1520f ~ vi1, data = data, cutpoint = 0, 
+##     bw = band)
+## 
+## Type:
+## sharp 
+## 
+## Estimates:
+##            Bandwidth  Observations  Estimate  Std. Error  z value  Pr(&gt;|z|)   
+## LATE       0.2398     1020          0.02963   0.01241     2.388    0.01696   *
+## Half-BW    0.1199      589          0.02502   0.01647     1.519    0.12869    
+## Double-BW  0.4795     2049          0.02279   0.01009     2.258    0.02397   *
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## F-statistics:
+##            F       Num. DoF  Denom. DoF  p        
+## LATE        4.988  3         1016        3.876e-03
+## Half-BW     1.704  3          585        3.303e-01
+## Double-BW  25.744  3         2045        4.441e-16</code></pre>
+<p>LATE corresponds to the estimation with optimal bandwidth. 1020 observations are used.</p>
+<p>Half-BW (Double-BW) is when narrower (wider) bandwidth is used, resulting in fewer (more) observations.</p>
+<p>An Islamic mayor leads to approximately 3 percentage points increase in women’s highschool enrollment. The effect is statistically significant.</p>
+<p>What we just estimated is Sharp RDD. For Fuzzy RDD, see the documentation of <em>?RDestimate</em>.</p>
+<p>Next, consider RD estimate for males. Don’t forget to obtain a new optimal bandwidth.</p>
+<pre><code>## 
+## Call:
+## RDestimate(formula = hischshr1520m ~ vi1, data = data, cutpoint = 0, 
+##     bw = band_m)
+## 
+## Type:
+## sharp 
+## 
+## Estimates:
+##            Bandwidth  Observations  Estimate  Std. Error  z value  Pr(&gt;|z|)   
+## LATE       0.3230     1342          0.011561  0.009089    1.272    0.2034     
+## Half-BW    0.1615      747          0.019136  0.011913    1.606    0.1082     
+## Double-BW  0.6460     2584          0.008664  0.007469    1.160    0.2460     
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## F-statistics:
+##            F       Num. DoF  Denom. DoF  p     
+## LATE       0.8750  3         1338        0.9068
+## Half-BW    1.4627  3          743        0.4469
+## Double-BW  0.9692  3         2580        0.8126</code></pre>
+<p>The effect is not statistically significant. This means Islamic rule has significant positive impact only on female education attainment.</p>
+</div>
+<div id="plotting-rdd-estimates" class="section level3">
+<h3>Plotting RDD estimates</h3>
+<pre class="r"><code>plot(rd_est, range=c(-0.6,0.6))
+abline(v=0) </code></pre>
+<p><img src="rdd_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>plot(rd_estm, range=c(-0.6,0.6))
+abline(v=0) </code></pre>
+<p><img src="rdd_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="rdd-estimation-with-covariates" class="section level3">
+<h3>RDD Estimation with Covariates</h3>
+<pre class="r"><code>provinceFE &lt;- data %&gt;%
+  select(starts_with(&quot;pd&quot;)) %&gt;%
+  select(-pd_1) %&gt;%
+  as.matrix()
+
+rd_est_control &lt;- RDestimate(hischshr1520f~vi1 | 
+                       vshr_islam1994 + partycount + 
+                       ageshr19 + ageshr60 + sexr + lpop1994 + 
+                       merkezi + merkezp + buyuk + subbuyuk +
+                       provinceFE,
+                     cutpoint=0, 
+                     bw=band, data=data)</code></pre>
+<pre class="r"><code>summary(rd_est_control)</code></pre>
+<pre><code>## 
+## Call:
+## RDestimate(formula = hischshr1520f ~ vi1 | vshr_islam1994 + partycount + 
+##     ageshr19 + ageshr60 + sexr + lpop1994 + merkezi + merkezp + 
+##     buyuk + subbuyuk + provinceFE, data = data, cutpoint = 0, 
+##     bw = band)
+## 
+## Type:
+## sharp 
+## 
+## Estimates:
+##            Bandwidth  Observations  Estimate  Std. Error  z value  Pr(&gt;|z|) 
+## LATE       0.2398     1020          0.02563   0.007843    3.267    0.0010853
+## Half-BW    0.1199      589          0.02891   0.010793    2.679    0.0073932
+## Double-BW  0.4795     2049          0.02334   0.006441    3.624    0.0002901
+##               
+## LATE       ** 
+## Half-BW    ** 
+## Double-BW  ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## F-statistics:
+##            F      Num. DoF  Denom. DoF  p
+## LATE       18.13  92         927        0
+## Half-BW    11.35  88         500        0
+## Double-BW  32.57  93        1955        0</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

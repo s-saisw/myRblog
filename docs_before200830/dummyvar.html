@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Estimation with Dummy Independent Variables</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 54px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h2 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h3 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h4 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h5 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h6 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Rblog</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Econometrics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="metricswRabout.html">About</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Regression Analysis</li>
+    <li class="dropdown-header">Estimation</li>
+    <li class="dropdown-header">Hypothesis Testing</li>
+    <li>
+      <a href="dummyvar.html">Dummy Variables</a>
+    </li>
+    <li>
+      <a href="reset.html">RESET</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Advanced Topics</li>
+    <li>
+      <a href="ivreg.html">IV estimation</a>
+    </li>
+    <li>
+      <a href="heckit.html">Sample Selection Correction</a>
+    </li>
+    <li>
+      <a href="rdd.html">Regression Discontinuity</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Miscellaneous</li>
+    <li class="dropdown-header">How to Use R and RStudio</li>
+    <li>
+      <a href="missingvalue.html">Missing values</a>
+    </li>
+    <li>
+      <a href="graphics.html">Graphics</a>
+    </li>
+    <li>
+      <a href="probdist.html">Probability Distributions</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Random Stuff with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Sending Customized Mass E-mail</li>
+    <li class="dropdown-header">Making ioslides with Rmd</li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/s-saisw">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://s-saisw.github.io/">
+    <span class="fa fa-id-card"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Estimation with Dummy Independent Variables</h1>
+
+</div>
+
+
+<pre class="r"><code>library(tidyverse)</code></pre>
+<div id="sample-data" class="section level2">
+<h2>Sample data</h2>
+<pre class="r"><code>UCBdata &lt;- UCBAdmissions %&gt;% as_tibble() #Little bit of cleaning
+head(UCBdata, 3)</code></pre>
+<pre><code>## # A tibble: 3 x 4
+##   Admit    Gender Dept      n
+##   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt;
+## 1 Admitted Male   A       512
+## 2 Rejected Male   A       313
+## 3 Admitted Female A        89</code></pre>
+<p>Suppose we want to estimate <span class="math display">\[n = \beta_0 + \beta_1 Admit + \epsilon\]</span></p>
+</div>
+<div id="dummy-variables-in-r" class="section level2">
+<h2>Dummy variables in R</h2>
+<p>There are many ways to estimate with dummy independent variables in R</p>
+<ul>
+<li>Direct estimation with <em>character vector</em>
+<ul>
+<li>Pro: easy to implement (if our data is similar to <em>UCBAdmissions</em> data)</li>
+<li>Con: difficult to change reference level</li>
+</ul></li>
+<li>Create <em>0-1 variable</em> for estimation
+<ul>
+<li>Pro: we can manually specify the reference level</li>
+<li>Con: cumbersome if we have many categories</li>
+</ul></li>
+<li>Coerce the variable to a <em>factor</em>
+<ul>
+<li>Pro: handle variables with many categories well (cf. fixed effects), can be used with numeric vectors</li>
+<li>Con: can be tricky to handle, change reference level</li>
+</ul></li>
+</ul>
+</div>
+<div id="estimation-with-charactor-vectors" class="section level2">
+<h2>Estimation with Charactor Vectors</h2>
+<pre class="r"><code>lm(data = UCBdata,n ~ 1 + Admit)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = n ~ 1 + Admit, data = UCBdata)
+## 
+## Coefficients:
+##   (Intercept)  AdmitRejected  
+##        146.25          84.67</code></pre>
+<p>The coefficient’s name displayed in the console follows the format ‘variable name’ + ‘level coded as 1’. Therefore, “AdmitRejected” implies that R has coded Rejected as 1 and Admitted as 0.</p>
+<p>R decides which one is reference level by its alphabetical order.</p>
+</div>
+<div id="creating-0-1-variables-using-ifelse" class="section level2">
+<h2>Creating 0-1 variables using <em>ifelse()</em></h2>
+<p>We can also directly create a new dummy variable.</p>
+<pre class="r"><code>UCBdata$admitDum &lt;- ifelse(UCBdata$Admit == &quot;Admitted&quot;, 1, 0)
+lm(data = UCBdata,n~1+admitDum)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = n ~ 1 + admitDum, data = UCBdata)
+## 
+## Coefficients:
+## (Intercept)     admitDum  
+##      230.92       -84.67</code></pre>
+<p>This process can be cumbersome if we have many categories (cf. fixed effects) or many categorical variables.</p>
+</div>
+<div id="creating-0-1-variables-using-i" class="section level2">
+<h2>Creating 0-1 variables using <em>I()</em></h2>
+<pre class="r"><code>I(UCBdata$Admit==&quot;Admitted&quot;)</code></pre>
+<pre><code>##  [1]  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE
+## [13]  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE</code></pre>
+<pre class="r"><code>lm(data = UCBdata,n~1+I(Admit==&quot;Admitted&quot;))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = n ~ 1 + I(Admit == &quot;Admitted&quot;), data = UCBdata)
+## 
+## Coefficients:
+##                (Intercept)  I(Admit == &quot;Admitted&quot;)TRUE  
+##                     230.92                      -84.67</code></pre>
+</div>
+<div id="estimation-with-integer-and-numerical-vectors" class="section level2">
+<h2>Estimation with Integer and Numerical Vectors</h2>
+<p>Let’s use mtcars data set. Suppose we want to estimate <span class="math display">\[mpg = \alpha + \beta_1I(cyl=6) +\beta_2I(cyl=8) + \epsilon\]</span></p>
+<pre class="r"><code>head(mtcars, 3)</code></pre>
+<pre><code>##                mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4     21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag 21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710    22.8   4  108  93 3.85 2.320 18.61  1  1    4    1</code></pre>
+<p>The following code does not work. Why?</p>
+<pre class="r"><code>lm(data = mtcars, mpg~1+cyl)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ 1 + cyl, data = mtcars)
+## 
+## Coefficients:
+## (Intercept)          cyl  
+##      37.885       -2.876</code></pre>
+<p>We may use I() function to do the job.</p>
+<pre class="r"><code>lm(data = mtcars,mpg~1+I(cyl==6)+I(cyl==8))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ 1 + I(cyl == 6) + I(cyl == 8), data = mtcars)
+## 
+## Coefficients:
+##     (Intercept)  I(cyl == 6)TRUE  I(cyl == 8)TRUE  
+##          26.664           -6.921          -11.564</code></pre>
+<p>However, if our variable contains many categories, this may be time-consuming. One easy fix is to coerce the variable into a factor.</p>
+</div>
+<div id="understanding-factors" class="section level2">
+<h2>Understanding Factors</h2>
+<p>A factor looks like a vector, but it has special properties. R keeps track of the unique values in a vector, and each unique value is called a <em>level</em> of the associated factor.</p>
+<p>If we have a vector of strings or integers, we can create a categorical variable by using the command <em>factor()</em>.</p>
+<pre class="r"><code>strVec &lt;- c(&quot;Win&quot;, &quot;Win&quot;, &quot;Lose&quot;, &quot;Tie&quot;, &quot;Win&quot;, &quot;Lose&quot;)
+f &lt;- factor(strVec)
+f</code></pre>
+<pre><code>## [1] Win  Win  Lose Tie  Win  Lose
+## Levels: Lose Tie Win</code></pre>
+<p>Notice that when we printed the factor, f, R did not put quotes around the values. They are levels, not strings.</p>
+<p>R also displays the distinct levels below the factor.</p>
+</div>
+<div id="estimation-with-a-factor-variable" class="section level2">
+<h2>Estimation with a Factor Variable</h2>
+<p>Going back to the previous question, we can coerce cyl into a factor.</p>
+<pre class="r"><code>lm(data = mtcars,mpg~1+factor(cyl))</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ 1 + factor(cyl), data = mtcars)
+## 
+## Coefficients:
+##  (Intercept)  factor(cyl)6  factor(cyl)8  
+##       26.664        -6.921       -11.564</code></pre>
+<p>This will be useful when we estimate models with many fixed effects.</p>
+</div>
+<div id="dummy-interaction-variables" class="section level2">
+<h2>Dummy Interaction Variables</h2>
+<pre class="r"><code>lm(data = mtcars, mpg~1+cyl*hp)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ 1 + cyl * hp, data = mtcars)
+## 
+## Coefficients:
+## (Intercept)          cyl           hp       cyl:hp  
+##    50.75121     -4.11914     -0.17068      0.01974</code></pre>
+<pre class="r"><code>lm(data = mtcars, mpg~1+factor(cyl)*hp)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = mpg ~ 1 + factor(cyl) * hp, data = mtcars)
+## 
+## Coefficients:
+##     (Intercept)     factor(cyl)6     factor(cyl)8               hp  
+##        35.98303        -15.30917        -17.90295         -0.11278  
+## factor(cyl)6:hp  factor(cyl)8:hp  
+##         0.10516          0.09853</code></pre>
+</div>
+<div id="reordering-factor" class="section level2">
+<h2>Reordering Factor</h2>
+<pre class="r"><code>factor(mtcars$cyl)</code></pre>
+<pre><code>##  [1] 6 6 4 6 8 6 8 4 4 6 6 8 8 8 8 8 8 4 4 4 4 8 8 8 8 4 4 4 8 6 8 4
+## Levels: 4 6 8</code></pre>
+<p>Originally, 4-cylinder is the base case. Suppose, we prefer 8-cylinder cars to be the base case. We can reorder the factor with <em>fct_relevel</em> from the <em>forcats</em> package.</p>
+<pre class="r"><code>library(forcats)
+cylf &lt;- mtcars$cyl %&gt;%
+  factor() %&gt;%
+  fct_relevel(levels = &quot;8&quot;) #specify the 1st level
+print(cylf)</code></pre>
+<pre><code>##  [1] 6 6 4 6 8 6 8 4 4 6 6 8 8 8 8 8 8 4 4 4 4 8 8 8 8 4 4 4 8 6 8 4
+## Levels: 8 4 6</code></pre>
+<p>Notice that the data order does not change. Therefore, we don’t have to worry about rearranging other variables.</p>
+</div>
+<div id="estimation-with-a-releveled-factor" class="section level2">
+<h2>Estimation with a Releveled Factor</h2>
+<p>Since the releveled factor was saved in new variable cylf, we need to estimate with the new variable instead.</p>
+<pre class="r"><code>lm(mtcars$mpg~1+cylf)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = mtcars$mpg ~ 1 + cylf)
+## 
+## Coefficients:
+## (Intercept)        cylf4        cylf6  
+##      15.100       11.564        4.643</code></pre>
+<p>Now 8-cylinder car has become the base case.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

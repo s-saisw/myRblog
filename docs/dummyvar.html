@@ -15,10 +15,13 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -104,33 +107,33 @@ summary {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 54px;
+  padding-top: 60px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h2 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h3 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h4 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h5 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h6 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .dropdown-submenu {
   position: relative;
@@ -250,6 +253,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -257,6 +323,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -269,15 +345,12 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">My Rblog</a>
+      <a class="navbar-brand" href="index.html">Metrics with R</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">Home</a>
-</li>
-<li>
-  <a href="about.html">About</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -286,10 +359,6 @@ $(document).ready(function () {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="metricswRabout.html">About</a>
-    </li>
-    <li class="divider"></li>
     <li class="dropdown-header">Regression Analysis</li>
     <li class="dropdown-header">Estimation</li>
     <li class="dropdown-header">Hypothesis Testing</li>
@@ -310,8 +379,15 @@ $(document).ready(function () {
     <li>
       <a href="rdd.html">Regression Discontinuity</a>
     </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Miscellaneous</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Miscellaneous
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
     <li class="dropdown-header">How to Use R and RStudio</li>
     <li>
       <a href="missingvalue.html">Missing values</a>
@@ -326,28 +402,32 @@ $(document).ready(function () {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Random Stuff with R
+    Documentation
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Sending Customized Mass E-mail</li>
+    <li class="dropdown-header">Publishing Rmd documents</li>
     <li class="dropdown-header">Making ioslides with Rmd</li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/s-saisw">
-    <span class="fa fa-github"></span>
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-bars"></span>
      
-  </a>
-</li>
-<li>
-  <a href="https://s-saisw.github.io/">
-    <span class="fa fa-id-card"></span>
      
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://github.com/s-saisw">Github profile</a>
+    </li>
+    <li>
+      <a href="https://s-saisw.github.io/">Personal website</a>
+    </li>
+  </ul>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -363,26 +443,13 @@ $(document).ready(function () {
 </div>
 
 
-<pre class="r"><code>library(tidyverse)</code></pre>
-<div id="sample-data" class="section level2">
-<h2>Sample data</h2>
-<pre class="r"><code>UCBdata &lt;- UCBAdmissions %&gt;% as_tibble() #Little bit of cleaning
-head(UCBdata, 3)</code></pre>
-<pre><code>## # A tibble: 3 x 4
-##   Admit    Gender Dept      n
-##   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt;
-## 1 Admitted Male   A       512
-## 2 Rejected Male   A       313
-## 3 Admitted Female A        89</code></pre>
-<p>Suppose we want to estimate <span class="math display">\[n = \beta_0 + \beta_1 Admit + \epsilon\]</span></p>
-</div>
 <div id="dummy-variables-in-r" class="section level2">
 <h2>Dummy variables in R</h2>
 <p>There are many ways to estimate with dummy independent variables in R</p>
 <ul>
 <li>Direct estimation with <em>character vector</em>
 <ul>
-<li>Pro: easy to implement (if our data is similar to <em>UCBAdmissions</em> data)</li>
+<li>Pro: easy to implement (if our data is a character.)</li>
 <li>Con: difficult to change reference level</li>
 </ul></li>
 <li>Create <em>0-1 variable</em> for estimation
@@ -396,10 +463,16 @@ head(UCBdata, 3)</code></pre>
 <li>Con: can be tricky to handle, change reference level</li>
 </ul></li>
 </ul>
+<p>For this topic, we are going to use the following packages.</p>
+<pre class="r"><code>library(tidyverse)
+library(forcats)</code></pre>
+<hr />
 </div>
 <div id="estimation-with-charactor-vectors" class="section level2">
 <h2>Estimation with Charactor Vectors</h2>
-<pre class="r"><code>lm(data = UCBdata,n ~ 1 + Admit)</code></pre>
+<p>Suppose we want to estimate <span class="math display">\[n = \beta_0 + \beta_1 Admit + \epsilon\]</span> from <code>UCBAdmissions</code> data.</p>
+<pre class="r"><code>UCBdata &lt;- UCBAdmissions %&gt;% as_tibble() #Little bit of cleaning
+lm(data = UCBdata,n ~ 1 + Admit)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = n ~ 1 + Admit, data = UCBdata)
@@ -409,10 +482,13 @@ head(UCBdata, 3)</code></pre>
 ##        146.25          84.67</code></pre>
 <p>The coefficient’s name displayed in the console follows the format ‘variable name’ + ‘level coded as 1’. Therefore, “AdmitRejected” implies that R has coded Rejected as 1 and Admitted as 0.</p>
 <p>R decides which one is reference level by its alphabetical order.</p>
+<hr />
 </div>
-<div id="creating-0-1-variables-using-ifelse" class="section level2">
-<h2>Creating 0-1 variables using <em>ifelse()</em></h2>
-<p>We can also directly create a new dummy variable.</p>
+<div id="directly-creating-0-1-variables" class="section level2">
+<h2>Directly Creating 0-1 Variables</h2>
+<p>There are many ways to create 0-1 variables. I’m going to introduce two simple metods with <code>ifelse()</code> and <code>I()</code>.</p>
+<div id="creating-0-1-variables-with-ifelse" class="section level3">
+<h3>Creating 0-1 variables with <code>ifelse()</code></h3>
 <pre class="r"><code>UCBdata$admitDum &lt;- ifelse(UCBdata$Admit == &quot;Admitted&quot;, 1, 0)
 lm(data = UCBdata,n~1+admitDum)</code></pre>
 <pre><code>## 
@@ -422,10 +498,10 @@ lm(data = UCBdata,n~1+admitDum)</code></pre>
 ## Coefficients:
 ## (Intercept)     admitDum  
 ##      230.92       -84.67</code></pre>
-<p>This process can be cumbersome if we have many categories (cf. fixed effects) or many categorical variables.</p>
 </div>
-<div id="creating-0-1-variables-using-i" class="section level2">
-<h2>Creating 0-1 variables using <em>I()</em></h2>
+<div id="creating-0-1-variables-with-i" class="section level3">
+<h3>Creating 0-1 variables with <code>I()</code></h3>
+<p>Another method is by <code>I()</code>. This requires only a tiny bit less typing than the one with <code>ifelse()</code>.</p>
 <pre class="r"><code>I(UCBdata$Admit==&quot;Admitted&quot;)</code></pre>
 <pre><code>##  [1]  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE
 ## [13]  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE</code></pre>
@@ -437,6 +513,9 @@ lm(data = UCBdata,n~1+admitDum)</code></pre>
 ## Coefficients:
 ##                (Intercept)  I(Admit == &quot;Admitted&quot;)TRUE  
 ##                     230.92                      -84.67</code></pre>
+<p>Creating dummy variables by hand can be cumbersome if we have many categories (cf. fixed effects) or many categorical variables.</p>
+<hr />
+</div>
 </div>
 <div id="estimation-with-integer-and-numerical-vectors" class="section level2">
 <h2>Estimation with Integer and Numerical Vectors</h2>
@@ -455,7 +534,7 @@ lm(data = UCBdata,n~1+admitDum)</code></pre>
 ## Coefficients:
 ## (Intercept)          cyl  
 ##      37.885       -2.876</code></pre>
-<p>We may use I() function to do the job.</p>
+<p>We may use <code>I()</code> function to do the job.</p>
 <pre class="r"><code>lm(data = mtcars,mpg~1+I(cyl==6)+I(cyl==8))</code></pre>
 <pre><code>## 
 ## Call:
@@ -465,21 +544,18 @@ lm(data = UCBdata,n~1+admitDum)</code></pre>
 ##     (Intercept)  I(cyl == 6)TRUE  I(cyl == 8)TRUE  
 ##          26.664           -6.921          -11.564</code></pre>
 <p>However, if our variable contains many categories, this may be time-consuming. One easy fix is to coerce the variable into a factor.</p>
+<hr />
 </div>
-<div id="understanding-factors" class="section level2">
-<h2>Understanding Factors</h2>
+<div id="estimation-with-a-factor-variable" class="section level2">
+<h2>Estimation with a Factor Variable</h2>
 <p>A factor looks like a vector, but it has special properties. R keeps track of the unique values in a vector, and each unique value is called a <em>level</em> of the associated factor.</p>
-<p>If we have a vector of strings or integers, we can create a categorical variable by using the command <em>factor()</em>.</p>
+<p>If we have a vector of strings or integers, we can create a categorical variable by using the command <code>factor()</code>.</p>
 <pre class="r"><code>strVec &lt;- c(&quot;Win&quot;, &quot;Win&quot;, &quot;Lose&quot;, &quot;Tie&quot;, &quot;Win&quot;, &quot;Lose&quot;)
 f &lt;- factor(strVec)
 f</code></pre>
 <pre><code>## [1] Win  Win  Lose Tie  Win  Lose
 ## Levels: Lose Tie Win</code></pre>
-<p>Notice that when we printed the factor, f, R did not put quotes around the values. They are levels, not strings.</p>
-<p>R also displays the distinct levels below the factor.</p>
-</div>
-<div id="estimation-with-a-factor-variable" class="section level2">
-<h2>Estimation with a Factor Variable</h2>
+<p>Notice that when we printed the factor, f, R did not put quotes around the values. They are levels, not strings. R also displays the distinct levels below the factor.</p>
 <p>Going back to the previous question, we can coerce cyl into a factor.</p>
 <pre class="r"><code>lm(data = mtcars,mpg~1+factor(cyl))</code></pre>
 <pre><code>## 
@@ -490,9 +566,8 @@ f</code></pre>
 ##  (Intercept)  factor(cyl)6  factor(cyl)8  
 ##       26.664        -6.921       -11.564</code></pre>
 <p>This will be useful when we estimate models with many fixed effects.</p>
-</div>
-<div id="dummy-interaction-variables" class="section level2">
-<h2>Dummy Interaction Variables</h2>
+<div id="dummy-interaction-variables" class="section level3">
+<h3>Dummy Interaction Variables</h3>
 <pre class="r"><code>lm(data = mtcars, mpg~1+cyl*hp)</code></pre>
 <pre><code>## 
 ## Call:
@@ -512,23 +587,19 @@ f</code></pre>
 ## factor(cyl)6:hp  factor(cyl)8:hp  
 ##         0.10516          0.09853</code></pre>
 </div>
-<div id="reordering-factor" class="section level2">
-<h2>Reordering Factor</h2>
+<div id="reordering-factor" class="section level3">
+<h3>Reordering Factor</h3>
 <pre class="r"><code>factor(mtcars$cyl)</code></pre>
 <pre><code>##  [1] 6 6 4 6 8 6 8 4 4 6 6 8 8 8 8 8 8 4 4 4 4 8 8 8 8 4 4 4 8 6 8 4
 ## Levels: 4 6 8</code></pre>
-<p>Originally, 4-cylinder is the base case. Suppose, we prefer 8-cylinder cars to be the base case. We can reorder the factor with <em>fct_relevel</em> from the <em>forcats</em> package.</p>
-<pre class="r"><code>library(forcats)
-cylf &lt;- mtcars$cyl %&gt;%
+<p>Originally, 4-cylinder is the base case. Suppose, we prefer 8-cylinder cars to be the base case. We can reorder the factor with <code>fct_relevel</code> from the <code>forcats</code> package.</p>
+<pre class="r"><code>cylf &lt;- mtcars$cyl %&gt;%
   factor() %&gt;%
   fct_relevel(levels = &quot;8&quot;) #specify the 1st level
 print(cylf)</code></pre>
 <pre><code>##  [1] 6 6 4 6 8 6 8 4 4 6 6 8 8 8 8 8 8 4 4 4 4 8 8 8 8 4 4 4 8 6 8 4
 ## Levels: 8 4 6</code></pre>
 <p>Notice that the data order does not change. Therefore, we don’t have to worry about rearranging other variables.</p>
-</div>
-<div id="estimation-with-a-releveled-factor" class="section level2">
-<h2>Estimation with a Releveled Factor</h2>
 <p>Since the releveled factor was saved in new variable cylf, we need to estimate with the new variable instead.</p>
 <pre class="r"><code>lm(mtcars$mpg~1+cylf)</code></pre>
 <pre><code>## 
@@ -540,9 +611,12 @@ print(cylf)</code></pre>
 ##      15.100       11.564        4.643</code></pre>
 <p>Now 8-cylinder car has become the base case.</p>
 </div>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -575,6 +649,32 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

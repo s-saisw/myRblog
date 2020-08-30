@@ -1,6 +1,17 @@
 ---
 title: "Heckit"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
 ---
+
+```{r, include=FALSE}
+library(sjPlot)
+```
+
+## Review of Heckit
 
 We want to estimate this model
 $$y = \mathbf{x\beta}+u,\ E(u|\mathbf{x})=0$$
@@ -11,7 +22,7 @@ Suppose the selection process follows this equation.
 $$s = \mathcal{1}[\mathbf{z\gamma} + v \ge 0],$$
 where $s=1$ if $y$ is observed, 0 otherwise.
 
-We can show that
+Then we can show that
 
 $$E(y|\mathbf{z},s=1) = \mathbf{x}\beta + \rho\lambda(\mathbf{z\gamma}),$$
 where $\lambda(\mathbf{z\gamma})$ is the inverse Mills ratio.
@@ -22,26 +33,38 @@ This equation means we can estimate $\beta$ using only the selected sample if we
 
 2. Using the selected sample, i.e. the observations for which $s_i = 1$, run the regression of $y_i$ on $\mathbf{x}_i$ and $\hat{\lambda}_i$. Obtain $\mathbf{\hat{\beta}}$.
 
-## Heckit by Hand: Computer Exercise 17.7
+***
 
-1. Use the *mroz* data for this exercise. Using the 428 women who were in the workforce, regress $\log(wage)$ on $educ$ using OLS. Include $exper$, $exper^2$, $nwifeinc$, $age$, $kidslt6$, and $kidsge6$ as explanatory variables. Report your estimate on educ and its standard error.
+## Heckit by Hand 
 
-2. Now, estimate the return to education by Heckit, where all exogenous variables show up in the second-stage regression. In other words, the regression is $\log (wage)$ on $educ$, $exper$, $exper^2$, $nwifeinc$, $age$, $kidslt6$, $kidsge6$ and $\hat{\lambda}$. Compare the estimated return to education and its standard error to that from Question 1. (Hint: We can access the linear fit using *[glmobject]$linear.predictors*.)
+As usual, load ```wooldridge``` and ```tidyverse``` to the session. If we want to do Heckit from scratch, we do not need any extra packages.
+
+```{r, message=FALSE, warning=FALSE}
+library(wooldridge)
+library(tidyverse)
+```
+
+### Computer Exercise 17.7 {.tabset .tabset-fade .tabset-pills}
+
+1. Use the ```mroz``` data for this exercise. Using the 428 women who were in the workforce, regress $\log(wage)$ on $educ$ using OLS. Include $exper$, $exper^2$, $nwifeinc$, $age$, $kidslt6$, and $kidsge6$ as explanatory variables. Report your estimate on educ and its standard error.
+
+2. Now, estimate the return to education by Heckit, where all exogenous variables show up in the second-stage regression. In other words, the regression is $\log (wage)$ on $educ$, $exper$, $exper^2$, $nwifeinc$, $age$, $kidslt6$, $kidsge6$ and $\hat{\lambda}$. Compare the estimated return to education and its standard error to that from Question 1. (Hint: We can access the linear fit using ```[glmobject]$linear.predictors```.
 
 3. Using only the 428 observations for working women, regress $\hat{\lambda}$ on $educ$, $exper$, $exper^2$, $nwifeinc$, $age$, $kidslt6$, and $kidsge6$. How big is the $R^2$? How does this help explain your findings from Question 2?
 
-### Question 1
+#### Question 1
 
 ```{r, warning = FALSE, message=FALSE}
-library(wooldridge)
-library(tidyverse)
 q1 <- lm(data = mroz, 
          lwage ~ 1 + educ + 
            exper + expersq + nwifeinc + age + kidslt6 + kidsge6)
-coefficients(summary(q1))[,1:3]
+tab_model(q1, show.ci = FALSE, show.stat = TRUE, show.se = TRUE,
+          show.p = FALSE, p.style = "stars")
 ```
 
-### Question 2
+***
+
+#### Question 2
 
 ```{r}
 # Step 1
@@ -54,15 +77,15 @@ mroz$imr <- dnorm(step1$linear.predictors) / pnorm(step1$linear.predictors)
 step2 <- lm(data = mroz[mroz$s==1,],
             lwage ~ 1 + educ + 
            exper + expersq + nwifeinc + age + kidslt6 + kidsge6 + imr)
-```
-
-```{r}
-summary(step2)
+tab_model(step2, show.ci = FALSE, show.stat = TRUE, show.se = TRUE,
+          show.p = FALSE, p.style = "stars")
 ```
 
 After sample selection correction, the return to education becomes larger but standard error is twice as large.
 
-### Question 3
+***
+
+#### Question 3
 
 ```{r}
 q3 <- lm(data = mroz[mroz$s==1,],
@@ -72,9 +95,11 @@ summary(q3)$r.squared
 
 There is substantial multicollinearity in the second stage regression. Thus, large standard errors. 
 
+***
+
 ## Automatic Heckit
 
-Instead of doing Heckit by hand, we can also use the *heckit()* function from *sampleSelection* package.
+Instead of doing Heckit by hand, we can also use the ```heckit()``` function from ```sampleSelection``` package.
 
 ```{r, warning=FALSE, message = FALSE}
 library(sampleSelection)
@@ -87,6 +112,8 @@ summary(mroz.heckit)
 ```
 
 The estimates are the same as the ones we obtained from doing heckit by hand.
+
+***
 
 ## Issues about Inverse Mill's Ratio
 There are several definitions of Inverse Mill's ratio. For example, the ones listed on [this forum](https://www.stata.com/support/faqs/statistics/inverse-mills-ratio/). However, in the context of Heckit, we need to use the following definition:

@@ -1,30 +1,47 @@
 ---
 title: "IV Estimation"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
 ---
+```{r, include=FALSE}
+library(sjPlot)
+```
+
+## Review of IV Estimation
 
 Consider 
 $$
 y = \beta_0 + \beta_1 x + u
 $$
 
-When $x$ and $u$ are correlated, OLS estimator is biased and inconsistent. IV methods can be used to make the estimator consistent
-but its estimator is never unbiased.
+When $x$ and $u$ are correlated, OLS estimator is biased and inconsistent. IV methods can be used to make the estimator consistent but its estimator is never unbiased.
   
 This is sufficient. As a Nobel-prize winning econometrician, Clive W.J. Granger, once said "If you can't get it right as $n$ goes to infinity, you shouldn't be in this business."
 
-## Requirement for IVs
-
-Instrument $z$ must satisfy
-  1. Exogeneity - $z$ should have no partial effect on $y$ and $z$ should be uncorrelated with omitted variables.
-  2. Relevance - $z$ must be related to $x$
+There are two requirements for IV. Firstly, instrument $z$ must satisfy *Exogeneity*, that is $z$ should have no partial effect on $y$ and $z$ should be uncorrelated with omitted variables. Secondly, *Relevance*, that is $z$ must be related to $x$.
   
 We can test the relevance assumption but we cannot test the exogeneity assumption. We must maintain exogeneity by appealing to economic behavior or introspection.
 
-# IV in Simple Regression Model
+***
 
-## Example 15.1 Return to Education for Married Women
+## IV in Simple Regression Model
 
-We want to estimate the return to education in the simple regression model
+Besides ```wooldridge``` and ```tidyverse```, another package we have to install for estimation with IV is ```AER```.
+
+```{r, message=FALSE, warning=FALSE}
+library(wooldridge)
+library(tidyverse)
+library(AER)
+```
+
+The main function we are going to use is ```ivreg```. After loading the packages to our R session, let's see how estimation works.
+
+### Example 15.1 Return to Education for Married Women. 
+
+For baseline, suppose we want to estimate the return to education in the simple regression model.
 
 $$
 \log(wage) = \beta_0 + \beta_1 educ + u
@@ -33,9 +50,9 @@ $$
 For comparison, let's obtain the OLS estimates.
 
 ```{r, message=FALSE, warning=FALSE}
-library(wooldridge)
 olsmod <- lm(data = mroz, lwage ~ 1 + educ)
-coefficients(summary(olsmod))[,1:3]
+tab_model(olsmod, show.ci = FALSE, show.stat = TRUE, show.se = TRUE,
+          show.p = FALSE, p.style = "stars")
 ```
 
 There may be some omitted variable in this estimating equation, e.g. ability.
@@ -45,14 +62,14 @@ Suppose we use father's education as an instrument for $educ$. We have to mainta
 Next, we have to confirm that $fatheduc$ is correlated with $educ$. We can check this by running a simple regression model.
 
 ```{r, message=FALSE, warning=FALSE}
-library(tidyverse)
 # make sure that the sample is consistent with the previous equation
 data151 <- mroz %>%
   select(lwage, educ, fatheduc) %>%
   na.omit()
 # run regression
 stage1 <- lm(data = data151, educ ~ 1 + fatheduc)
-coefficients(summary(stage1))[,1:3]
+tab_model(stage1, show.ci = FALSE, show.stat = TRUE, show.se = TRUE,
+          show.p = FALSE, p.style = "stars")
 ```
 
 t statistics on $educ$ is 9.42, suggesting a statistically significant correlation between $fatheduc$ and $educ$.
@@ -60,21 +77,25 @@ t statistics on $educ$ is 9.42, suggesting a statistically significant correlati
 Then we can estimate the equation using $fatheduc$ as IV.
 
 ```{r, warning=FALSE, message=FALSE}
-library(AER)
 ivmod <- ivreg(data = data151,
                lwage ~ 1 + educ | 1 + fatheduc)
-coefficients(summary(ivmod))[,1:3]
+tab_model(ivmod, show.ci = FALSE, show.stat = TRUE, show.se = TRUE,
+          show.p = FALSE, p.style = "stars")
 ```
 
 The IV estimate of the return to education is now 5.9%, which is only around half of the OLS estimate. This suggests that the OLS estimate is too high, consistent with the omitted ability bias.
 
 Note that the standard error of the IV estimate is also twice that of OLS estimate. Recall that the variance of IV estimate depends on the correlation between $x$ and $z$ too. If $z$ can explain little of the variation in $x$, standard error of the IV estimate can be much larger. 
+
+***
   
-# IV Estimation in Multiple Regression Model
+## IV Estimation in Multiple Regression Model
 
-## Example 15.4 College proximity as an IV for education
+How can we estimate with IV if we have other exogenous variables? Let's look at the following example.
 
-Use *card* data from the *Wooldridge* package to estimate the following equation
+### Example 15.4 College proximity as an IV for education. {.tabset .tabset-fade .tabset-pills}
+
+Use ```card``` data from the ```Wooldridge``` package to estimate the following equation
 $$
 \log(wage) = \beta_0 + \beta_1 educ + X\gamma + u,
 $$
@@ -85,7 +106,7 @@ where $X$ contains $exper, exper^2, black, smsa, south,$ and a full set of regio
 3. Now instrument $educ$ with $nearc4$. What is the estimated return to education?
 4. Compare the $R^2$ of OLS and IV estimates. What does this $R^2$ imply?
 
-### Question 1
+#### Question 1
 
 ```{r}
 allreg <- paste0("reg", 662:669)
@@ -97,51 +118,54 @@ controls <- paste(demovar, regvar, sep = "+")
 fmla <- as.formula(paste("lwage ~ educ + ", controls))
 
 olsmod <- lm(data = card,formula = fmla) 
-coefficients(summary(olsmod))[1:2,1:3] #omit other controls
+tab_model(olsmod, show.ci = FALSE, show.stat = TRUE, show.se = TRUE,
+          show.p = FALSE, p.style = "stars")
 ```
 
-#### Some remarks on coding
+##### Some remarks on coding
 
-If we have multiple dependent dummy variables with similar names, we may use *paste0()* to construct variables efficiently.
+If we have multiple dependent dummy variables with similar names, we may use ```paste0()``` to construct variables efficiently.
 
 ```{r}
 paste0("reg", 662:669)
 ```
 
-We can pass it to the formula by using *paste()*
+We can pass it to the formula by using ```paste()```
 
 ```{r}
 paste(allreg, collapse = "+")
 ```
 
-We can transform string to formula by using *as.formula()*
+We can transform string to formula by using ```as.formula()```
 
 Creating an object that summarizes a model is useful when we want to use the same set of variables multiple times.
 
-### Question 2
+#### Question 2
 
 ```{r}
 fmla <- as.formula(paste("educ ~ 1 + nearc4 + ", controls))
 stage1 <- lm(data = card, formula = fmla)
-coefficients(summary(stage1))[,1:3] 
+tab_model(stage1, show.ci = FALSE, show.stat = TRUE, show.se = TRUE,
+          show.p = FALSE, p.style = "stars")
 ```
 
 Considering other things being fixed, people who lived near a collge in 1966 had 0.32 year more education than those who didn't. 
 
 The t statistic on $nearc4$ is 3.64, implying that if $nearc4$ is uncorrelated with the unobserved factors in the error term, we can use it as an IV for $educ$.
 
-### Question 3
+#### Question 3
 
 ```{r}
 fmla <- as.formula(paste("lwage ~ 1 + educ + ", controls, "|",
                          paste("1 + nearc4 + ", controls)))
 ivmod <- ivreg(data = card, formula = fmla)
-coefficients(summary(ivmod))[1:2,1:3] #omit other controls
+tab_model(ivmod, show.ci = FALSE, show.stat = TRUE, show.se = TRUE,
+          show.p = FALSE, p.style = "stars")
 ```
 
 IV estimate is twice as large as OLS estimate but the standard error is over 18 times larger. Larger confidence interval is a price we must pay to get a consistent estimator.
 
-### Question 4
+#### Question 4
 
 ```{r}
 summary(olsmod)$r.squared
@@ -150,7 +174,9 @@ summary(ivmod)$r.squared
 
 Although $R^2$ is larger for OLS, it does not imply OLS is a better model. $R^2$ obtained from OLS estimation is always larger because OLS minimizes the sum of squared residuals.
 
-# Issues with Doing 2SLS Manually
+***
+
+## Issues with Doing 2SLS Manually
 
 Most econometrics packages have special commands for 2SLS, so there is no need to perform the two stages explicitly.
 
@@ -160,8 +186,8 @@ Note that the estimated coefficients obtained manually are identical to those ob
 
 Verify these properties with the following computer exercise.
 
-## Computer Exercise 15.9 
-Use the *wage2* data from the *Wooldridge* package.
+### Computer Exercise 15.9 {.tabset .tabset-fade .tabset-pills}
+Use the ```wage2``` data from the ```Wooldridge``` package.
 
 1. Use a 2SLS routine to estimate the equation
 $$
@@ -173,34 +199,36 @@ where $sibs$ is the IV for $educ$.
   
 3. What happens if we neglect exogenous variables from the first stage? Regress $educ$ on $sibs$ only and obtain the fitted values, $\tilde{educ}$. Run the regression of $\log(wage)$ on $\tilde{educ}, exper, tenure, black$.
   
-### Question 1
+#### Question 1
 
 ```{r}
 q1591 <- ivreg(data = wage2,
                lwage ~ 1 + educ + exper + tenure + black|
                  1 + sibs + exper + tenure + black)
-
-coefficients(summary(q1591))[,1:3]
+tab_model(q1591, show.ci = FALSE, show.stat = TRUE, show.se = TRUE,
+          show.p = FALSE, p.style = "stars")
 ```
 
-### Question 2
+#### Question 2
 
 ```{r}
 q1592_1 <- lm(data = wage2, educ ~ 1 + sibs + exper + tenure + black )
 wage2$prededuc <- q1592_1$fitted.values
 q1592_2 <- lm(data = wage2, lwage ~ 1 + prededuc + exper + tenure + black)
-coefficients(summary(q1592_2))[,1:3]
+tab_model(q1592_2, show.ci = FALSE, show.stat = TRUE, show.se = TRUE,
+          show.p = FALSE, p.style = "stars")
 ```
 
 The standard errors obtained from the manual method is too large.
 
-### Question 3 
+#### Question 3 
 
 ```{r}
 q1593_1 <- lm(data = wage2, educ ~ sibs  )
 wage2$prededuc <- q1593_1$fitted.values
 q1593_2 <- lm(data = wage2, lwage ~ 1 + prededuc + exper + tenure + black)
-coefficients(summary(q1593_2))[,1:3]
+tab_model(q1593_2, show.ci = FALSE, show.stat = TRUE, show.se = TRUE,
+          show.p = FALSE, p.style = "stars")
 ```
 
 Now the estimated coefficients are also different.

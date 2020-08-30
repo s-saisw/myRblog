@@ -1,16 +1,11 @@
 name: "my-website"
 navbar:
-  title: "My Rblog"
+  title: "Metrics with R"
   left:
     - text: "Home"
       href: index.html
-    - text: "About"
-      href: about.html
     - text: "Econometrics with R"
       menu:
-        - text: "About"
-          href: metricswRabout.html
-        - text: "---------"
         - text: "Regression Analysis"
         - text: "Estimation"
         - text: "Hypothesis Testing"
@@ -26,8 +21,8 @@ navbar:
           href: heckit.html
         - text: "Regression Discontinuity"
           href: rdd.html
-        - text: "---------"
-        - text: "Miscellaneous"
+    - text: "Miscellaneous"
+      menu:
         - text: "How to Use R and RStudio"
         - text: "Missing values"
           href: missingvalue.html
@@ -35,16 +30,20 @@ navbar:
           href: graphics.html
         - text: "Probability Distributions"
           href: probdist.html
-    - text: "Random Stuff with R"
+    - text: "Documentation"
       menu:
-        - text: "Sending Customized Mass E-mail"
+        - text: "Publishing Rmd documents"
         - text: "Making ioslides with Rmd"
+
   right:
-    - icon: fa-github
-      href: https://github.com/s-saisw
-    - icon: fa-id-card
-      href: https://s-saisw.github.io/
+    - icon: fa-bars
+      menu:
+        - text: "Github profile"
+          href: https://github.com/s-saisw
+        - text: "Personal website"
+          href: https://s-saisw.github.io/
 output:
   html_document:
-    theme: lumen
+    theme: flatly
     highlight: textmate
+      

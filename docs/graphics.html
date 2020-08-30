@@ -15,10 +15,13 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -104,33 +107,33 @@ summary {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 54px;
+  padding-top: 60px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h2 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h3 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h4 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h5 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h6 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .dropdown-submenu {
   position: relative;
@@ -250,6 +253,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -257,6 +323,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -269,15 +345,12 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">My Rblog</a>
+      <a class="navbar-brand" href="index.html">Metrics with R</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">Home</a>
-</li>
-<li>
-  <a href="about.html">About</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -286,10 +359,6 @@ $(document).ready(function () {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="metricswRabout.html">About</a>
-    </li>
-    <li class="divider"></li>
     <li class="dropdown-header">Regression Analysis</li>
     <li class="dropdown-header">Estimation</li>
     <li class="dropdown-header">Hypothesis Testing</li>
@@ -310,8 +379,15 @@ $(document).ready(function () {
     <li>
       <a href="rdd.html">Regression Discontinuity</a>
     </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Miscellaneous</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Miscellaneous
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
     <li class="dropdown-header">How to Use R and RStudio</li>
     <li>
       <a href="missingvalue.html">Missing values</a>
@@ -326,28 +402,32 @@ $(document).ready(function () {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Random Stuff with R
+    Documentation
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Sending Customized Mass E-mail</li>
+    <li class="dropdown-header">Publishing Rmd documents</li>
     <li class="dropdown-header">Making ioslides with Rmd</li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/s-saisw">
-    <span class="fa fa-github"></span>
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-bars"></span>
      
-  </a>
-</li>
-<li>
-  <a href="https://s-saisw.github.io/">
-    <span class="fa fa-id-card"></span>
      
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://github.com/s-saisw">Github profile</a>
+    </li>
+    <li>
+      <a href="https://s-saisw.github.io/">Personal website</a>
+    </li>
+  </ul>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -363,27 +443,20 @@ $(document).ready(function () {
 </div>
 
 
+<div id="building-blocks-of-graphics" class="section level2">
+<h2>Building Blocks of Graphics</h2>
 <p>We can visualize data in R using the graphics package. Graphics package is part of the standard distribution so there is no need to install or load it to the session.</p>
 <p>Contents here are based on “R cookbook: Proven recipes for data analysis, statistics, and graphics” by Paul Teetor (2011).</p>
 <p>There are many other packages we can use. For example, ggplot2, the so-called “Grammar of Graphics”. It is said to be easier to construct and customize plots and the graphics are generelly more attractive. For more information on how to use ggplot2, see <a href="https://rc2e.com/graphics" class="uri">https://rc2e.com/graphics</a>.</p>
-<div id="notes-on-graphics-functions" class="section level2">
-<h2>Notes on Graphics Functions</h2>
 <p>There are two levels of graphics function.</p>
 <ul>
-<li><em>High-level</em> graphics function
-<ul>
-<li>It starts a new graph, sets the scale, draws some adornment, and renders the graphic.</li>
-<li>Examples include: plot(), boxplot(), hist(), qqnorm(), curve()</li>
-</ul></li>
-<li><em>Low-level</em> graphics function
-<ul>
-<li>It adds something to an existing graph e.g. points, lines, text, adornments.</li>
-<li>Examples include: points(), lines(), abline(), segments(), polygon(), text()</li>
-</ul></li>
+<li><p><em>High-level</em> graphics function. It starts a new graph, sets the scale, draws some adornment, and renders the graphic. Examples include: <code>plot()</code>, <code>boxplot()</code>, <code>hist()</code>, <code>qqnorm()</code>, <code>curve()</code></p></li>
+<li><p><em>Low-level</em> graphics function. It adds something to an existing graph e.g. points, lines, text, adornments. Examples include: <code>points()</code>, <code>lines()</code>, <code>abline()</code>, <code>segments()</code>, <code>polygon()</code>, <code>text()</code></p></li>
 </ul>
+<hr />
 </div>
-<div id="creating-a-scatterplot" class="section level2">
-<h2>Creating a Scatterplot</h2>
+<div id="scatterplot" class="section level2">
+<h2>Scatterplot</h2>
 <p>Scatter plot is a quick way to see the relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>.</p>
 <pre class="r"><code>plot(cars$speed, cars$dist)</code></pre>
 <p><img src="graphics_files/figure-html/unnamed-chunk-1-1.png" width="672" style="display: block; margin: auto;" /></p>
@@ -391,94 +464,91 @@ $(document).ready(function () {
 <pre class="r"><code>plot(cars)</code></pre>
 <p><img src="graphics_files/figure-html/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Note that the axis label changed.</p>
+<hr />
 </div>
-<div id="adding-a-title-and-labels" class="section level2">
-<h2>Adding a Title and Labels</h2>
+<div id="title-and-labels" class="section level2">
+<h2>Title and Labels</h2>
 <p>Now we want to specify a title to the plot and add labels for the axes.</p>
 <pre class="r"><code>plot(cars,
      main = &quot;Speed VS Stopping distance (1920)&quot;,
      xlab = &quot;Speed (mph)&quot;,
      ylab = &quot;Stopping Distance (ft)&quot;)</code></pre>
 <p><img src="graphics_files/figure-html/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<hr />
 </div>
-<div id="creating-a-scatter-plot-for-multiple-groups" class="section level2">
-<h2>Creating a Scatter Plot for Multiple Groups</h2>
-<p>If we want to distinguish one group from another, we may plot multiple groups in one scatter plot. Let’s do this using iris data set.</p>
-<pre class="r"><code>head(iris)</code></pre>
-<pre><code>##   Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-## 1          5.1         3.5          1.4         0.2  setosa
-## 2          4.9         3.0          1.4         0.2  setosa
-## 3          4.7         3.2          1.3         0.2  setosa
-## 4          4.6         3.1          1.5         0.2  setosa
-## 5          5.0         3.6          1.4         0.2  setosa
-## 6          5.4         3.9          1.7         0.4  setosa</code></pre>
+<div id="scatter-plot-for-multiple-groups" class="section level2">
+<h2>Scatter Plot for Multiple Groups</h2>
+<p>If we want to distinguish one group from another, we may plot multiple groups in one scatter plot. Let’s do this using <code>iris</code> data set.</p>
 <pre class="r"><code>plot(iris$Petal.Length, iris$Petal.Width)</code></pre>
-<p><img src="graphics_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>We can add identifier to the groups using <em>pch</em> argument.</p>
+<p><img src="graphics_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We can add identifier to the groups using <code>pch</code> argument.</p>
 <pre class="r"><code>plot(iris$Petal.Length, iris$Petal.Width,
      pch = as.integer(iris$Species)) #Besides pch, you may use col</code></pre>
-<p><img src="graphics_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="graphics_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>We can also modify the point types.</p>
 <pre class="r"><code>symbol &lt;- c(0,15,25)
 pointVec &lt;- symbol[as.integer(iris$Species)]
 
 plot(iris$Petal.Length, iris$Petal.Width,
      pch = pointVec)</code></pre>
-<p><img src="graphics_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="graphics_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<hr />
 </div>
 <div id="adding-a-legend" class="section level2">
 <h2>Adding a Legend</h2>
-<p><em>legend()</em> is one of the low-level graphic functions. Therefore, we need to call <em>legend()</em> after calling <em>plot()</em>.</p>
+<p><code>legend()</code> is one of the low-level graphic functions. Therefore, we need to call <code>legend()</code> after calling <code>plot()</code>.</p>
 <pre class="r"><code>plot(iris$Petal.Length, iris$Petal.Width,
      pch = as.integer(iris$Species))
 legend(1, 2.5, #Coordinates of the legend box
        c(&quot;Setosa&quot;, &quot;Versicolor&quot;, &quot;Virginica&quot;), #labels
        pch = 1:3) #must be consistent with the argument in plot()</code></pre>
-<p><img src="graphics_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="graphics_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<hr />
 </div>
 <div id="plotting-regression-line" class="section level2">
 <h2>Plotting regression line</h2>
-<p>We want to add a line that illustrates linear regrssion of data points. abline() is also a low-level graphic function.</p>
+<p>We want to add a line that illustrates linear regrssion of data points. <code>abline()</code> is also a low-level graphic function.</p>
 <pre class="r"><code>m &lt;- lm(data = cars, dist ~ 1 + speed)
 plot(cars, main = &quot;Speed VS Stopping distance (1920)&quot;, 
      xlab = &quot;Speed (mph)&quot;, 
      ylab = &quot;Stopping Distance (ft)&quot;)
 abline(m)</code></pre>
-<p><img src="graphics_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="graphics_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<hr />
 </div>
-<div id="creating-a-histogram" class="section level2">
-<h2>Creating a histogram</h2>
+<div id="histogram" class="section level2">
+<h2>Histogram</h2>
 <p>We may plot histogram of numeric values. Suppose we want to plot a t-distribution with degree of freedom 25.</p>
 <pre class="r"><code>set.seed(2020) #set seed to ensure each draw yields the same numbers
 samp &lt;- rt(1000,25) #draw 1000 obs from t distribution with df=25 
 hist(samp)</code></pre>
-<p><img src="graphics_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>We may suggest the number of bins by including a second argument in hist().</p>
+<p><img src="graphics_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We may suggest the number of bins by including a second argument in <code>hist()</code>.</p>
 <pre class="r"><code>hist(samp, 50, 
      xlab = &quot;samp&quot;, main = &quot;Histogram of samp&quot;)</code></pre>
-<p><img src="graphics_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>We may add a density estimate to a histogram with line()</p>
+<p><img src="graphics_files/figure-html/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>We may add a density estimate to a histogram with <code>line()</code></p>
 <pre class="r"><code>hist(samp, 50, 
      xlab = &quot;samp&quot;, main = &quot;Histogram of samp&quot;,
-     ### &lt;b&gt;
      prob = T)
 lines(density(samp)) #density() computes kernel density</code></pre>
-<p><img src="graphics_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>### &lt;/b&gt;</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+<hr />
 </div>
 <div id="writing-your-plot-to-a-file" class="section level2">
 <h2>Writing your plot to a file</h2>
 <p>Saving your plot involves three steps</p>
 <ol style="list-style-type: decimal">
-<li>Call a function to open a new graphic file, e.g. png(), jpeg(), pdf()</li>
-<li>Call plot and its friends to generate the graphics image.</li>
-<li>Call dev.off to close the graphics file.</li>
+<li>Call a function to open a new graphic file, e.g. <code>png()</code>, <code>jpeg()</code>, <code>pdf()</code></li>
+<li>Call <code>plot</code> and its friends to generate the graphics image.</li>
+<li>Call <code>dev.off</code> to close the graphics file.</li>
 </ol>
 <p>The file will be written to your current working directory.</p>
 <pre class="r"><code>pdf(&quot;samp.pdf&quot;)
 hist(samp, 20, prob = T)
 lines(density(samp))
 dev.off()</code></pre>
+<hr />
 </div>
 <div id="best-practices-for-data-visualization" class="section level2">
 <h2>Best Practices for Data Visualization</h2>
@@ -497,18 +567,49 @@ dev.off()</code></pre>
 <li>sequential - for plotting a quantitative variable that goes from low to high</li>
 <li>diverging - for contrasting the extremes (low, medium, and high) of a quantitative variable</li>
 <li>qualitative - for distinguishing among the levels of a categorical variable</li>
-<li><em>RColorBrewer</em> is a useful package for color schemes</li>
+<li><code>RColorBrewer</code> is a useful package for color schemes</li>
 </ul></li>
 </ul>
+<hr />
 </div>
-<div id="font-issue-in-plot" class="section level2">
-<h2>Font Issue in <em>plot()</em></h2>
-<p>Mac users may have encountered this warning message: no font could be found for family “Arial” when using plot().</p>
-<p>You may solve it by doing the following: 1. Go to Finder. 2. Search for “Font Book” and open it. 3. Look for the Arial font and, if it is grayed out, turn it on.</p>
+<div id="how-to-use-rcolorbrewer" class="section level2">
+<h2>How to Use <code>RColorBrewer</code></h2>
+<p><code>RColorBrewer</code> package provides a ready-to-use color palletes.</p>
+<pre class="r"><code>library(RColorBrewer)</code></pre>
+<p>We can easily view all of the palletes by using the following command.</p>
+<pre class="r"><code>display.brewer.all()</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>Each palette contains eight colors. We can view the colors in a single palette by using the <code>display.brewer.pal()</code> command. Suppose we want to view all eight colors of palette <code>Pastel2</code></p>
+<pre class="r"><code>display.brewer.pal(n = 8, name = &#39;Pastel2&#39;)</code></pre>
+<p><img src="graphics_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>To obtain the hexadecimal color code, we need to use <code>brewer.pal()</code>.</p>
+<pre class="r"><code>brewer.pal(n = 8, name = &#39;Pastel2&#39;)</code></pre>
+<pre><code>## [1] &quot;#B3E2CD&quot; &quot;#FDCDAC&quot; &quot;#CBD5E8&quot; &quot;#F4CAE4&quot; &quot;#E6F5C9&quot; &quot;#FFF2AE&quot; &quot;#F1E2CC&quot;
+## [8] &quot;#CCCCCC&quot;</code></pre>
+<p>One drawback of <code>brewer.pal()</code> is that the minimum number of <code>n</code> is three. If we want only one or two colors, we cannot extract the color codes directly. However, we may do the following:</p>
+<pre class="r"><code>themecol &lt;- brewer.pal(n = 8, name = &#39;Pastel2&#39;)
+themecol[1:2]</code></pre>
+<pre><code>## [1] &quot;#B3E2CD&quot; &quot;#FDCDAC&quot;</code></pre>
+<hr />
+</div>
+<div id="common-error-messages" class="section level2">
+<h2>Common Error Messages</h2>
+<p>Below are some of the common error messages we encounter often when dealing with graphics.</p>
+<div id="margins-too-large" class="section level3">
+<h3>Margins too large</h3>
+<p>After calling a new plot, sometimes we encounter this error message: <em>Error in plot.new(): figure margins too large</em>. This error occurs if the <code>Plots</code> panel is too small. One easy fix is to adjust the size of the panel.</p>
+</div>
+<div id="no-font-could-be-found" class="section level3">
+<h3>No font could be found</h3>
+<p>Mac users may have encountered this warning message: no font could be found for family “Arial” when using <code>plot()</code>.</p>
+<p>You may solve it by doing the following: 1. Go to <code>Finder</code>. 2. Search for <code>Font Book</code> and open it. 3. Look for the Arial font. If it is grayed out, turn it on.</p>
+</div>
 </div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -541,6 +642,32 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

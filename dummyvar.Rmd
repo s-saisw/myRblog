@@ -1,26 +1,17 @@
 ---
 title: "Estimation with Dummy Independent Variables"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
 ---
-
-```{r, warning= FALSE, message= FALSE}
-library(tidyverse)
-```
-
-## Sample data
-
-```{r,echo=TRUE}
-UCBdata <- UCBAdmissions %>% as_tibble() #Little bit of cleaning
-head(UCBdata, 3)
-```
-
-Suppose we want to estimate 
-$$n = \beta_0 + \beta_1 Admit + \epsilon$$
 
 ## Dummy variables in R
 There are many ways to estimate with dummy independent variables in R
 
 - Direct estimation with *character vector*
-  - Pro: easy to implement (if our data is similar to *UCBAdmissions* data)
+  - Pro: easy to implement (if our data is a character.)
   - Con: difficult to change reference level
   
 - Create *0-1 variable* for estimation
@@ -30,10 +21,22 @@ There are many ways to estimate with dummy independent variables in R
 - Coerce the variable to a *factor*
   - Pro: handle variables with many categories well (cf. fixed effects), can be used with numeric vectors
   - Con: can be tricky to handle, change reference level
+  
+For this topic, we are going to use the following packages.
+```{r, warning= FALSE, message= FALSE}
+library(tidyverse)
+library(forcats)
+```
 
+***
 ## Estimation with Charactor Vectors
 
+Suppose we want to estimate 
+$$n = \beta_0 + \beta_1 Admit + \epsilon$$
+from ```UCBAdmissions``` data.
+
 ```{r, echo=TRUE}
+UCBdata <- UCBAdmissions %>% as_tibble() #Little bit of cleaning
 lm(data = UCBdata,n ~ 1 + Admit)
 ```
 
@@ -41,24 +44,30 @@ The coefficient's name displayed in the console follows the format 'variable nam
 
 R decides which one is reference level by its alphabetical order.
 
-## Creating 0-1 variables using *ifelse()*
+***
+## Directly Creating 0-1 Variables
 
-We can also directly create a new dummy variable.
+There are many ways to create 0-1 variables. I'm going to introduce two simple metods with ```ifelse()``` and ```I()```.
+
+### Creating 0-1 variables with ```ifelse()```
 
 ```{r, echo=TRUE}
 UCBdata$admitDum <- ifelse(UCBdata$Admit == "Admitted", 1, 0)
 lm(data = UCBdata,n~1+admitDum)
 ```
 
-This process can be cumbersome if we have many categories (cf. fixed effects) or many categorical variables. 
+### Creating 0-1 variables with ```I()```
 
-## Creating 0-1 variables using *I()*
+Another method is by ```I()```. This requires only a tiny bit less typing than the one with ```ifelse()```.
 
 ```{r, echo=TRUE}
 I(UCBdata$Admit=="Admitted")
 lm(data = UCBdata,n~1+I(Admit=="Admitted"))
 ```
 
+Creating dummy variables by hand can be cumbersome if we have many categories (cf. fixed effects) or many categorical variables. 
+
+***
 ## Estimation with Integer and Numerical Vectors
 
 Let's use mtcars data set. Suppose we want to estimate 
@@ -72,7 +81,7 @@ The following code does not work. Why?
 lm(data = mtcars, mpg~1+cyl)
 ```
 
-We may use I() function to do the job.
+We may use ```I()``` function to do the job.
 
 ```{r, echo=TRUE}
 lm(data = mtcars,mpg~1+I(cyl==6)+I(cyl==8))
@@ -80,11 +89,12 @@ lm(data = mtcars,mpg~1+I(cyl==6)+I(cyl==8))
 
 However, if our variable contains many categories, this may be time-consuming. One easy fix is to coerce the variable into a factor.
 
-## Understanding Factors
+***
+## Estimation with a Factor Variable
 
 A factor looks like a vector, but it has special properties. R keeps track of the unique values in a vector, and each unique value is called a *level* of the associated factor.
 
-If we have a vector of strings or integers, we can create a categorical variable by using the command *factor()*.
+If we have a vector of strings or integers, we can create a categorical variable by using the command ```factor()```.
 
 ```{r, echo=TRUE}
 strVec <- c("Win", "Win", "Lose", "Tie", "Win", "Lose")
@@ -92,11 +102,7 @@ f <- factor(strVec)
 f
 ```
 
-Notice that when we printed the factor, f, R did not put quotes around the values. They are levels, not strings.
-
-R also displays the distinct levels below the factor.
-
-## Estimation with a Factor Variable
+Notice that when we printed the factor, f, R did not put quotes around the values. They are levels, not strings. R also displays the distinct levels below the factor.
 
 Going back to the previous question, we can coerce cyl into a factor.
 
@@ -106,7 +112,7 @@ lm(data = mtcars,mpg~1+factor(cyl))
 
 This will be useful when we estimate models with many fixed effects.
 
-## Dummy Interaction Variables
+### Dummy Interaction Variables
 
 ```{r, echo=TRUE}
 lm(data = mtcars, mpg~1+cyl*hp)
@@ -115,16 +121,15 @@ lm(data = mtcars, mpg~1+cyl*hp)
 lm(data = mtcars, mpg~1+factor(cyl)*hp)
 ```
 
-## Reordering Factor
+### Reordering Factor
 
 ```{r, echo=TRUE}
 factor(mtcars$cyl)
 ```
 
-Originally, 4-cylinder is the base case. Suppose, we prefer 8-cylinder cars to be the base case. We can reorder the factor with *fct_relevel* from the *forcats* package.
+Originally, 4-cylinder is the base case. Suppose, we prefer 8-cylinder cars to be the base case. We can reorder the factor with ```fct_relevel``` from the ```forcats``` package.
 
 ```{r, echo=TRUE, warning=FALSE}
-library(forcats)
 cylf <- mtcars$cyl %>%
   factor() %>%
   fct_relevel(levels = "8") #specify the 1st level
@@ -132,8 +137,6 @@ print(cylf)
 ```
 
 Notice that the data order does not change. Therefore, we don't have to worry about rearranging other variables.
-
-## Estimation with a Releveled Factor
 
 Since the releveled factor was saved in new variable cylf, we need to estimate with the new variable instead.
 

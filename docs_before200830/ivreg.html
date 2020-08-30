@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>IV Estimation</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 54px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h2 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h3 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h4 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h5 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h6 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">My Rblog</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Econometrics with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="metricswRabout.html">About</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Regression Analysis</li>
+    <li class="dropdown-header">Estimation</li>
+    <li class="dropdown-header">Hypothesis Testing</li>
+    <li>
+      <a href="dummyvar.html">Dummy Variables</a>
+    </li>
+    <li>
+      <a href="reset.html">RESET</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Advanced Topics</li>
+    <li>
+      <a href="ivreg.html">IV estimation</a>
+    </li>
+    <li>
+      <a href="heckit.html">Sample Selection Correction</a>
+    </li>
+    <li>
+      <a href="rdd.html">Regression Discontinuity</a>
+    </li>
+    <li class="divider"></li>
+    <li class="dropdown-header">Miscellaneous</li>
+    <li class="dropdown-header">How to Use R and RStudio</li>
+    <li>
+      <a href="missingvalue.html">Missing values</a>
+    </li>
+    <li>
+      <a href="graphics.html">Graphics</a>
+    </li>
+    <li>
+      <a href="probdist.html">Probability Distributions</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Random Stuff with R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Sending Customized Mass E-mail</li>
+    <li class="dropdown-header">Making ioslides with Rmd</li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/s-saisw">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+<li>
+  <a href="https://s-saisw.github.io/">
+    <span class="fa fa-id-card"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">IV Estimation</h1>
+
+</div>
+
+
+<p>Consider <span class="math display">\[
+y = \beta_0 + \beta_1 x + u
+\]</span></p>
+<p>When <span class="math inline">\(x\)</span> and <span class="math inline">\(u\)</span> are correlated, OLS estimator is biased and inconsistent. IV methods can be used to make the estimator consistent but its estimator is never unbiased.</p>
+<p>This is sufficient. As a Nobel-prize winning econometrician, Clive W.J. Granger, once said “If you can’t get it right as <span class="math inline">\(n\)</span> goes to infinity, you shouldn’t be in this business.”</p>
+<div id="requirement-for-ivs" class="section level2">
+<h2>Requirement for IVs</h2>
+<p>Instrument <span class="math inline">\(z\)</span> must satisfy 1. Exogeneity - <span class="math inline">\(z\)</span> should have no partial effect on <span class="math inline">\(y\)</span> and <span class="math inline">\(z\)</span> should be uncorrelated with omitted variables. 2. Relevance - <span class="math inline">\(z\)</span> must be related to <span class="math inline">\(x\)</span></p>
+<p>We can test the relevance assumption but we cannot test the exogeneity assumption. We must maintain exogeneity by appealing to economic behavior or introspection.</p>
+</div>
+<div id="iv-in-simple-regression-model" class="section level1">
+<h1>IV in Simple Regression Model</h1>
+<div id="example-15.1-return-to-education-for-married-women" class="section level2">
+<h2>Example 15.1 Return to Education for Married Women</h2>
+<p>We want to estimate the return to education in the simple regression model</p>
+<p><span class="math display">\[
+\log(wage) = \beta_0 + \beta_1 educ + u
+\]</span></p>
+<p>For comparison, let’s obtain the OLS estimates.</p>
+<pre class="r"><code>library(wooldridge)
+olsmod &lt;- lm(data = mroz, lwage ~ 1 + educ)
+coefficients(summary(olsmod))[,1:3]</code></pre>
+<pre><code>##               Estimate Std. Error   t value
+## (Intercept) -0.1851968 0.18522590 -0.999843
+## educ         0.1086487 0.01439985  7.545125</code></pre>
+<p>There may be some omitted variable in this estimating equation, e.g. ability.</p>
+<p>Suppose we use father’s education as an instrument for <span class="math inline">\(educ\)</span>. We have to maintain that father’s education is uncorrelated with <span class="math inline">\(u\)</span> (Exogeneity).</p>
+<p>Next, we have to confirm that <span class="math inline">\(fatheduc\)</span> is correlated with <span class="math inline">\(educ\)</span>. We can check this by running a simple regression model.</p>
+<pre class="r"><code>library(tidyverse)
+# make sure that the sample is consistent with the previous equation
+data151 &lt;- mroz %&gt;%
+  select(lwage, educ, fatheduc) %&gt;%
+  na.omit()
+# run regression
+stage1 &lt;- lm(data = data151, educ ~ 1 + fatheduc)
+coefficients(summary(stage1))[,1:3]</code></pre>
+<pre><code>##               Estimate Std. Error   t value
+## (Intercept) 10.2370514 0.27593629 37.099330
+## fatheduc     0.2694416 0.02858634  9.425538</code></pre>
+<p>t statistics on <span class="math inline">\(educ\)</span> is 9.42, suggesting a statistically significant correlation between <span class="math inline">\(fatheduc\)</span> and <span class="math inline">\(educ\)</span>.</p>
+<p>Then we can estimate the equation using <span class="math inline">\(fatheduc\)</span> as IV.</p>
+<pre class="r"><code>library(AER)
+ivmod &lt;- ivreg(data = data151,
+               lwage ~ 1 + educ | 1 + fatheduc)
+coefficients(summary(ivmod))[,1:3]</code></pre>
+<pre><code>##               Estimate Std. Error   t value
+## (Intercept) 0.44110341 0.44610177 0.9887955
+## educ        0.05917348 0.03514177 1.6838501</code></pre>
+<p>The IV estimate of the return to education is now 5.9%, which is only around half of the OLS estimate. This suggests that the OLS estimate is too high, consistent with the omitted ability bias.</p>
+<p>Note that the standard error of the IV estimate is also twice that of OLS estimate. Recall that the variance of IV estimate depends on the correlation between <span class="math inline">\(x\)</span> and <span class="math inline">\(z\)</span> too. If <span class="math inline">\(z\)</span> can explain little of the variation in <span class="math inline">\(x\)</span>, standard error of the IV estimate can be much larger.</p>
+</div>
+</div>
+<div id="iv-estimation-in-multiple-regression-model" class="section level1">
+<h1>IV Estimation in Multiple Regression Model</h1>
+<div id="example-15.4-college-proximity-as-an-iv-for-education" class="section level2">
+<h2>Example 15.4 College proximity as an IV for education</h2>
+<p>Use <em>card</em> data from the <em>Wooldridge</em> package to estimate the following equation <span class="math display">\[
+\log(wage) = \beta_0 + \beta_1 educ + X\gamma + u,
+\]</span> where <span class="math inline">\(X\)</span> contains <span class="math inline">\(exper, exper^2, black, smsa, south,\)</span> and a full set of regional dummy for variables and an SMSA dummy for where the man was living in 1966.</p>
+<ol style="list-style-type: decimal">
+<li>Estimate the above equation with OLS.</li>
+<li>Check the releveance assumption of <span class="math inline">\(nearc4\)</span>, dummy variable of whether someone grew up near a four year college, a possible IV candidate.</li>
+<li>Now instrument <span class="math inline">\(educ\)</span> with <span class="math inline">\(nearc4\)</span>. What is the estimated return to education?</li>
+<li>Compare the <span class="math inline">\(R^2\)</span> of OLS and IV estimates. What does this <span class="math inline">\(R^2\)</span> imply?</li>
+</ol>
+<div id="question-1" class="section level3">
+<h3>Question 1</h3>
+<pre class="r"><code>allreg &lt;- paste0(&quot;reg&quot;, 662:669)
+regvar &lt;- paste(allreg, collapse = &quot;+&quot;) 
+demovar &lt;- paste(&quot;exper&quot;, &quot;expersq&quot;, &quot;black&quot;, 
+                 &quot;smsa&quot;, &quot;south&quot;, &quot;smsa66&quot;, sep = &quot;+&quot;)
+controls &lt;- paste(demovar, regvar, sep = &quot;+&quot;)
+
+fmla &lt;- as.formula(paste(&quot;lwage ~ educ + &quot;, controls))
+
+olsmod &lt;- lm(data = card,formula = fmla) 
+coefficients(summary(olsmod))[1:2,1:3] #omit other controls</code></pre>
+<pre><code>##               Estimate  Std. Error  t value
+## (Intercept) 4.62080681 0.074232729 62.24757
+## educ        0.07469326 0.003498346 21.35102</code></pre>
+<div id="some-remarks-on-coding" class="section level4">
+<h4>Some remarks on coding</h4>
+<p>If we have multiple dependent dummy variables with similar names, we may use <em>paste0()</em> to construct variables efficiently.</p>
+<pre class="r"><code>paste0(&quot;reg&quot;, 662:669)</code></pre>
+<pre><code>## [1] &quot;reg662&quot; &quot;reg663&quot; &quot;reg664&quot; &quot;reg665&quot; &quot;reg666&quot; &quot;reg667&quot; &quot;reg668&quot; &quot;reg669&quot;</code></pre>
+<p>We can pass it to the formula by using <em>paste()</em></p>
+<pre class="r"><code>paste(allreg, collapse = &quot;+&quot;)</code></pre>
+<pre><code>## [1] &quot;reg662+reg663+reg664+reg665+reg666+reg667+reg668+reg669&quot;</code></pre>
+<p>We can transform string to formula by using <em>as.formula()</em></p>
+<p>Creating an object that summarizes a model is useful when we want to use the same set of variables multiple times.</p>
+</div>
+</div>
+<div id="question-2" class="section level3">
+<h3>Question 2</h3>
+<pre class="r"><code>fmla &lt;- as.formula(paste(&quot;educ ~ 1 + nearc4 + &quot;, controls))
+stage1 &lt;- lm(data = card, formula = fmla)
+coefficients(summary(stage1))[,1:3] </code></pre>
+<pre><code>##                  Estimate Std. Error     t value
+## (Intercept) 16.6382528714 0.24062973  69.1446279
+## nearc4       0.3198989401 0.08786382   3.6408495
+## exper       -0.4125333766 0.03369962 -12.2414851
+## expersq      0.0008685739 0.00165038   0.5262872
+## black       -0.9355287224 0.09373475  -9.9805962
+## smsa         0.4021824762 0.10481122   3.8372081
+## south       -0.0516125985 0.13542844  -0.3811061
+## smsa66       0.0254805246 0.10576919   0.2409069
+## reg662      -0.0786363485 0.18711541  -0.4202559
+## reg663      -0.0279389574 0.18337452  -0.1523601
+## reg664       0.1171819636 0.21725307   0.5393800
+## reg665      -0.2726164766 0.21842042  -1.2481273
+## reg666      -0.3028146970 0.23707119  -1.2773154
+## reg667      -0.2168177325 0.23438785  -0.9250383
+## reg668       0.5238913666 0.26747487   1.9586564
+## reg669       0.2102709906 0.20245681   1.0385968</code></pre>
+<p>Considering other things being fixed, people who lived near a collge in 1966 had 0.32 year more education than those who didn’t.</p>
+<p>The t statistic on <span class="math inline">\(nearc4\)</span> is 3.64, implying that if <span class="math inline">\(nearc4\)</span> is uncorrelated with the unobserved factors in the error term, we can use it as an IV for <span class="math inline">\(educ\)</span>.</p>
+</div>
+<div id="question-3" class="section level3">
+<h3>Question 3</h3>
+<pre class="r"><code>fmla &lt;- as.formula(paste(&quot;lwage ~ 1 + educ + &quot;, controls, &quot;|&quot;,
+                         paste(&quot;1 + nearc4 + &quot;, controls)))
+ivmod &lt;- ivreg(data = card, formula = fmla)
+coefficients(summary(ivmod))[1:2,1:3] #omit other controls</code></pre>
+<pre><code>##              Estimate Std. Error  t value
+## (Intercept) 3.6661509 0.92482953 3.964137
+## educ        0.1315038 0.05496367 2.392559</code></pre>
+<p>IV estimate is twice as large as OLS estimate but the standard error is over 18 times larger. Larger confidence interval is a price we must pay to get a consistent estimator.</p>
+</div>
+<div id="question-4" class="section level3">
+<h3>Question 4</h3>
+<pre class="r"><code>summary(olsmod)$r.squared</code></pre>
+<pre><code>## [1] 0.2998365</code></pre>
+<pre class="r"><code>summary(ivmod)$r.squared</code></pre>
+<pre><code>## [1] 0.2381655</code></pre>
+<p>Although <span class="math inline">\(R^2\)</span> is larger for OLS, it does not imply OLS is a better model. <span class="math inline">\(R^2\)</span> obtained from OLS estimation is always larger because OLS minimizes the sum of squared residuals.</p>
+</div>
+</div>
+</div>
+<div id="issues-with-doing-2sls-manually" class="section level1">
+<h1>Issues with Doing 2SLS Manually</h1>
+<p>Most econometrics packages have special commands for 2SLS, so there is no need to perform the two stages explicitly.</p>
+<p>In most cases, we should avoid doing the second stage manually, as the standard errors obtained in this way is not valid. (See Chapter 15.3 for more details.)</p>
+<p>Note that the estimated coefficients obtained manually are identical to those obtained from the usual 2SLS routine.</p>
+<p>Verify these properties with the following computer exercise.</p>
+<div id="computer-exercise-15.9" class="section level2">
+<h2>Computer Exercise 15.9</h2>
+<p>Use the <em>wage2</em> data from the <em>Wooldridge</em> package.</p>
+<ol style="list-style-type: decimal">
+<li><p>Use a 2SLS routine to estimate the equation <span class="math display">\[
+\log(wage) = \beta_0 + \beta_1 educ + \beta_2 exper + \beta_3 tenure + \beta_4 black + u,
+\]</span> where <span class="math inline">\(sibs\)</span> is the IV for <span class="math inline">\(educ\)</span>.</p></li>
+<li><p>Now, manually carry out 2SLS. Regress <span class="math inline">\(educ\)</span> on <span class="math inline">\(sibs, exper, tenure, black\)</span> and obtain the fitted values <span class="math inline">\(\hat{educ}\)</span>. Run the second stage regression <span class="math inline">\(\log(wage)\)</span> on <span class="math inline">\(\hat{educ}, exper, tenure, black\)</span></p></li>
+<li><p>What happens if we neglect exogenous variables from the first stage? Regress <span class="math inline">\(educ\)</span> on <span class="math inline">\(sibs\)</span> only and obtain the fitted values, <span class="math inline">\(\tilde{educ}\)</span>. Run the regression of <span class="math inline">\(\log(wage)\)</span> on <span class="math inline">\(\tilde{educ}, exper, tenure, black\)</span>.</p></li>
+</ol>
+<div id="question-1-1" class="section level3">
+<h3>Question 1</h3>
+<pre class="r"><code>q1591 &lt;- ivreg(data = wage2,
+               lwage ~ 1 + educ + exper + tenure + black|
+                 1 + sibs + exper + tenure + black)
+
+coefficients(summary(q1591))[,1:3]</code></pre>
+<pre><code>##                Estimate  Std. Error   t value
+## (Intercept)  5.21597615 0.543451467  9.597869
+## educ         0.09363248 0.033719397  2.776814
+## exper        0.02092161 0.008387730  2.494312
+## tenure       0.01154820 0.002739654  4.215202
+## black       -0.18332854 0.050135831 -3.656637</code></pre>
+</div>
+<div id="question-2-1" class="section level3">
+<h3>Question 2</h3>
+<pre class="r"><code>q1592_1 &lt;- lm(data = wage2, educ ~ 1 + sibs + exper + tenure + black )
+wage2$prededuc &lt;- q1592_1$fitted.values
+q1592_2 &lt;- lm(data = wage2, lwage ~ 1 + prededuc + exper + tenure + black)
+coefficients(summary(q1592_2))[,1:3]</code></pre>
+<pre><code>##                Estimate  Std. Error   t value
+## (Intercept)  5.21597615 0.568814731  9.169903
+## prededuc     0.09363248 0.035293105  2.652996
+## exper        0.02092161 0.008779191  2.383091
+## tenure       0.01154820 0.002867516  4.027247
+## black       -0.18332854 0.052475705 -3.493589</code></pre>
+<p>The standard errors obtained from the manual method is too large.</p>
+</div>
+<div id="question-3-1" class="section level3">
+<h3>Question 3</h3>
+<pre class="r"><code>q1593_1 &lt;- lm(data = wage2, educ ~ sibs  )
+wage2$prededuc &lt;- q1593_1$fitted.values
+q1593_2 &lt;- lm(data = wage2, lwage ~ 1 + prededuc + exper + tenure + black)
+coefficients(summary(q1593_2))[,1:3]</code></pre>
+<pre><code>##                  Estimate  Std. Error    t value
+## (Intercept)  5.7710225257 0.360375840 16.0138996
+## prededuc     0.0699748770 0.026375790  2.6529964
+## exper       -0.0003939701 0.003120682 -0.1262449
+## tenure       0.0139745992 0.002690957  5.1931713
+## black       -0.2416308816 0.041527963 -5.8185103</code></pre>
+<p>Now the estimated coefficients are also different.</p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

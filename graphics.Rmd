@@ -1,6 +1,13 @@
 ---
 title: "Graphics"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
 ---
+
+## Building Blocks of Graphics
 
 We can visualize data in R using the graphics package. Graphics package is part of the standard distribution so there is no need to install or load it to the session.
 
@@ -8,18 +15,15 @@ Contents here are based on "R cookbook: Proven recipes for data analysis, statis
 
 There are many other packages we can use. For example, ggplot2, the so-called "Grammar of Graphics". It is said to be easier to construct and customize plots and the graphics are generelly more attractive. For more information on how to use ggplot2, see https://rc2e.com/graphics.
   
-## Notes on Graphics Functions
 There are two levels of graphics function.
 
-- *High-level* graphics function
-  - It starts a new graph, sets the scale, draws some adornment, and renders the graphic.
-  - Examples include: plot(), boxplot(), hist(), qqnorm(), curve() 
+- *High-level* graphics function. It starts a new graph, sets the scale, draws some adornment, and renders the graphic. Examples include: ```plot()```, ```boxplot()```, ```hist()```, ```qqnorm()```, ```curve()``` 
   
-- *Low-level* graphics function
-  - It adds something to an existing graph e.g. points, lines, text, adornments.
-  - Examples include: points(), lines(), abline(), segments(), polygon(), text()
-  
-## Creating a Scatterplot
+- *Low-level* graphics function. It adds something to an existing graph e.g. points, lines, text, adornments. Examples include: ```points()```, ```lines()```, ```abline()```, ```segments()```, ```polygon()```, ```text()```
+
+***
+
+## Scatterplot
 
 Scatter plot is a quick way to see the relationship between $x$ and $y$.
 
@@ -34,7 +38,9 @@ plot(cars)
 
 Note that the axis label changed.
 
-## Adding a Title and Labels
+***
+
+## Title and Labels
 
 Now we want to specify a title to the plot and add labels for the axes.
 ```{r, echo=TRUE, fig.height= 4, fig.align="center"}
@@ -44,19 +50,17 @@ plot(cars,
      ylab = "Stopping Distance (ft)")
 ```
 
-## Creating a Scatter Plot for Multiple Groups
+***
 
-If we want to distinguish one group from another, we may plot multiple groups in one scatter plot. Let's do this using iris data set.
+## Scatter Plot for Multiple Groups
 
-```{r, echo=TRUE}
-head(iris)
-```
+If we want to distinguish one group from another, we may plot multiple groups in one scatter plot. Let's do this using ```iris``` data set.
 
 ```{r, echo=TRUE, fig.align="center" }
 plot(iris$Petal.Length, iris$Petal.Width)
 ```
 
-We can add identifier to the groups using *pch* argument.
+We can add identifier to the groups using ```pch``` argument.
 
 ```{r, echo=TRUE, fig.align="center" }
 plot(iris$Petal.Length, iris$Petal.Width,
@@ -72,9 +76,11 @@ plot(iris$Petal.Length, iris$Petal.Width,
      pch = pointVec)
 ```
 
+***
+
 ## Adding a Legend
 
-*legend()* is one of the low-level graphic functions. Therefore, we need to call *legend()* after calling *plot()*.
+```legend()``` is one of the low-level graphic functions. Therefore, we need to call ```legend()``` after calling ```plot()```.
 
 ```{r, echo=TRUE, fig.align="center"}
 plot(iris$Petal.Length, iris$Petal.Width,
@@ -84,9 +90,11 @@ legend(1, 2.5, #Coordinates of the legend box
        pch = 1:3) #must be consistent with the argument in plot()
 ```
 
+***
+
 ## Plotting regression line
 
-We want to add a line that illustrates linear regrssion of data points. abline() is also a low-level graphic function.
+We want to add a line that illustrates linear regrssion of data points. ```abline()``` is also a low-level graphic function.
 
 ```{r, echo=TRUE, fig.align="center"}
 m <- lm(data = cars, dist ~ 1 + speed)
@@ -96,7 +104,9 @@ plot(cars, main = "Speed VS Stopping distance (1920)",
 abline(m)
 ```
 
-## Creating a histogram
+***
+
+## Histogram
 
 We may plot histogram of numeric values. Suppose we want to plot a t-distribution with degree of freedom 25.
 ```{r, echo=TRUE, fig.align="center"}
@@ -105,30 +115,30 @@ samp <- rt(1000,25) #draw 1000 obs from t distribution with df=25
 hist(samp)
 ```
 
-We may suggest the number of bins by including a second argument in hist().
+We may suggest the number of bins by including a second argument in ```hist()```.
 
 ```{r, echo=TRUE, fig.align="center"}
 hist(samp, 50, 
      xlab = "samp", main = "Histogram of samp")
 ```
 
-We may add a density estimate to a histogram with line()
+We may add a density estimate to a histogram with ```line()```
 ```{r, echo=TRUE, fig.align="center"}
 hist(samp, 50, 
      xlab = "samp", main = "Histogram of samp",
-     ### <b>
      prob = T)
 lines(density(samp)) #density() computes kernel density
-### </b>
 ```
+
+***
 
 ## Writing your plot to a file
 
 Saving your plot involves three steps
 
-1. Call a function to open a new graphic file, e.g. png(), jpeg(), pdf()
-2. Call plot and its friends to generate the graphics image.
-3. Call dev.off to close the graphics file.
+1. Call a function to open a new graphic file, e.g. ```png()```, ```jpeg()```, ```pdf()```
+2. Call ```plot``` and its friends to generate the graphics image.
+3. Call ```dev.off``` to close the graphics file.
 
 The file will be written to your current working directory.
 
@@ -138,6 +148,8 @@ hist(samp, 20, prob = T)
 lines(density(samp))
 dev.off()
 ```
+
+***
 
 ## Best Practices for Data Visualization
 
@@ -152,13 +164,58 @@ dev.off()
   - sequential - for plotting a quantitative variable that goes from low to high
   - diverging - for contrasting the extremes (low, medium, and high) of a quantitative variable
   - qualitative - for distinguishing among the levels of a categorical variable
-  - *RColorBrewer* is a useful package for color schemes
-  
-## Font Issue in *plot()*
+  - ```RColorBrewer``` is a useful package for color schemes
 
-Mac users may have encountered this warning message: no font could be found for family "Arial" when using plot().
+***
+
+## How to Use ```RColorBrewer```
+
+```RColorBrewer``` package provides a ready-to-use color palletes.
+
+```{r, message=FALSE, warning=FALSE}
+library(RColorBrewer)
+```
+
+We can easily view all of the palletes by using the following command.
+
+```{r}
+display.brewer.all()
+```
+
+Each palette contains eight colors. We can view the colors in a single palette by using the ```display.brewer.pal()``` command. Suppose we want to view all eight colors of palette ```Pastel2```
+
+```{r}
+display.brewer.pal(n = 8, name = 'Pastel2')
+```
+
+To obtain the hexadecimal color code, we need to use ```brewer.pal()```.
+
+```{r}
+brewer.pal(n = 8, name = 'Pastel2')
+```
+
+One drawback of ```brewer.pal()``` is that the minimum number of ```n``` is three. If we want only one or two colors, we cannot extract the color codes directly. However, we may do the following:
+
+```{r}
+themecol <- brewer.pal(n = 8, name = 'Pastel2')
+themecol[1:2]
+```
+
+***
+
+## Common Error Messages
+
+Below are some of the common error messages we encounter often when dealing with graphics.
+
+### Margins too large
+
+After calling a new plot, sometimes we encounter this error message: *Error in plot.new(): figure margins too large*. This error occurs if the ```Plots``` panel is too small. One easy fix is to adjust the size of the panel.
+
+### No font could be found
+
+Mac users may have encountered this warning message: no font could be found for family "Arial" when using ```plot()```.
 
 You may solve it by doing the following: 
-1. Go to Finder.
-2. Search for "Font Book" and open it.
-3. Look for the Arial font and, if it is grayed out, turn it on.
+1. Go to ```Finder```.
+2. Search for ```Font Book``` and open it.
+3. Look for the Arial font. If it is grayed out, turn it on.

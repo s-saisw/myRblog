@@ -1,12 +1,21 @@
 ---
 title: "Regression Discontinuity Design"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
 ---
+
+## Review of RDD
 
 RD is based on the seemingly paradoxical idea that rigid rules create valuable experiments.
 
 There are two distinct features of RDD. When $a$ is our running variable, first, treatment status is deterministic of $a$ and second, Treatment status is a discontinuous function of $a$.
   
 There are two types of RDD: First, Sharp RDD - Treatment cleanly switches on or off once running variable passes threshold. Second, Fuzzy RDD - Probability or intensity of treatment jumps at a cutoff.
+
+***
 
 ## Summary of Meyersson (2014)
 
@@ -43,11 +52,13 @@ Having an Islamic mayor increases female enrollment by 3 percentage points. Effe
 
 In religiously conservative communities, the headscarf ban, mixed-sex classes, and a secular curriculum create barriers to enroll in school for religious women. Islamic parties overcome these barriers by allowing headscarfs and creating facilities more amenable to religious conservatives.
 
+***
+
 ## Replication
 
 ### Download replication data
 
-Visit https://erikmeyersson.com/research/ $\rightarrow$ Publications $\rightarrow$ “Islamic Rule and the Empowerment of the Poor and Pious” $\rightarrow$ STATA replication files and load *regdata0.dta* to R working environment.
+Visit https://erikmeyersson.com/research/ $\rightarrow$ Publications $\rightarrow$ “Islamic Rule and the Empowerment of the Poor and Pious” $\rightarrow$ STATA replication files and load ```regdata0.dta``` to R working environment.
 
 ```{r, warning = FALSE, message=FALSE}
 library(haven) #import dta data
@@ -173,7 +184,7 @@ Half-BW (Double-BW) is when narrower (wider) bandwidth is used, resulting in few
 
 An Islamic mayor leads to approximately 3 percentage points increase in women's highschool enrollment. The effect is statistically significant.
 
-What we just estimated is Sharp RDD. For Fuzzy RDD, see the documentation of *?RDestimate*.
+What we just estimated is Sharp RDD. For Fuzzy RDD, see the documentation of ```?RDestimate```.
 
 Next, consider RD estimate for males. Don't forget to obtain a new optimal bandwidth.
 

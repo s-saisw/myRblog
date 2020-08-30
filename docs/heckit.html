@@ -15,10 +15,13 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -104,33 +107,33 @@ summary {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 54px;
+  padding-top: 60px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h2 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h3 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h4 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h5 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .section h6 {
-  padding-top: 59px;
-  margin-top: -59px;
+  padding-top: 65px;
+  margin-top: -65px;
 }
 .dropdown-submenu {
   position: relative;
@@ -250,6 +253,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -257,6 +323,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -269,15 +345,12 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">My Rblog</a>
+      <a class="navbar-brand" href="index.html">Metrics with R</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">Home</a>
-</li>
-<li>
-  <a href="about.html">About</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -286,10 +359,6 @@ $(document).ready(function () {
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="metricswRabout.html">About</a>
-    </li>
-    <li class="divider"></li>
     <li class="dropdown-header">Regression Analysis</li>
     <li class="dropdown-header">Estimation</li>
     <li class="dropdown-header">Hypothesis Testing</li>
@@ -310,8 +379,15 @@ $(document).ready(function () {
     <li>
       <a href="rdd.html">Regression Discontinuity</a>
     </li>
-    <li class="divider"></li>
-    <li class="dropdown-header">Miscellaneous</li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Miscellaneous
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
     <li class="dropdown-header">How to Use R and RStudio</li>
     <li>
       <a href="missingvalue.html">Missing values</a>
@@ -326,28 +402,32 @@ $(document).ready(function () {
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Random Stuff with R
+    Documentation
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu">
-    <li class="dropdown-header">Sending Customized Mass E-mail</li>
+    <li class="dropdown-header">Publishing Rmd documents</li>
     <li class="dropdown-header">Making ioslides with Rmd</li>
   </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li>
-  <a href="https://github.com/s-saisw">
-    <span class="fa fa-github"></span>
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-bars"></span>
      
-  </a>
-</li>
-<li>
-  <a href="https://s-saisw.github.io/">
-    <span class="fa fa-id-card"></span>
      
+    <span class="caret"></span>
   </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://github.com/s-saisw">Github profile</a>
+    </li>
+    <li>
+      <a href="https://s-saisw.github.io/">Personal website</a>
+    </li>
+  </ul>
 </li>
       </ul>
     </div><!--/.nav-collapse -->
@@ -363,43 +443,202 @@ $(document).ready(function () {
 </div>
 
 
+<div id="review-of-heckit" class="section level2">
+<h2>Review of Heckit</h2>
 <p>We want to estimate this model <span class="math display">\[y = \mathbf{x\beta}+u,\ E(u|\mathbf{x})=0\]</span></p>
 <p>However, <span class="math inline">\(y\)</span> is not observed for some observations.</p>
 <p>Suppose the selection process follows this equation. <span class="math display">\[s = \mathcal{1}[\mathbf{z\gamma} + v \ge 0],\]</span> where <span class="math inline">\(s=1\)</span> if <span class="math inline">\(y\)</span> is observed, 0 otherwise.</p>
-<p>We can show that</p>
+<p>Then we can show that</p>
 <p><span class="math display">\[E(y|\mathbf{z},s=1) = \mathbf{x}\beta + \rho\lambda(\mathbf{z\gamma}),\]</span> where <span class="math inline">\(\lambda(\mathbf{z\gamma})\)</span> is the inverse Mills ratio.</p>
 <p>This equation means we can estimate <span class="math inline">\(\beta\)</span> using only the selected sample if we include <span class="math inline">\(\lambda(\mathbf{z\gamma})\)</span> as an additional regressor. This means we can correct for sample selection in two steps:</p>
 <ol style="list-style-type: decimal">
 <li><p>Using all observations, estimate a probit model of <span class="math inline">\(s_i\)</span> on <span class="math inline">\(\mathbf{z}_i\)</span> and obtain the estimates <span class="math inline">\(\mathbf{\hat{\gamma}}\)</span>. Compute the inverse Mills ratio <span class="math inline">\(\hat{\lambda}_i = \lambda(\mathbf{z_i\hat{\gamma}}) = \phi(\mathbf{z_i\hat{\gamma}})/\Phi(\mathbf{z_i\hat{\gamma}})\)</span> for each <span class="math inline">\(i\)</span>.</p></li>
 <li><p>Using the selected sample, i.e. the observations for which <span class="math inline">\(s_i = 1\)</span>, run the regression of <span class="math inline">\(y_i\)</span> on <span class="math inline">\(\mathbf{x}_i\)</span> and <span class="math inline">\(\hat{\lambda}_i\)</span>. Obtain <span class="math inline">\(\mathbf{\hat{\beta}}\)</span>.</p></li>
 </ol>
-<div id="heckit-by-hand-computer-exercise-17.7" class="section level2">
-<h2>Heckit by Hand: Computer Exercise 17.7</h2>
+<hr />
+</div>
+<div id="heckit-by-hand" class="section level2">
+<h2>Heckit by Hand</h2>
+<p>As usual, load <code>wooldridge</code> and <code>tidyverse</code> to the session. If we want to do Heckit from scratch, we do not need any extra packages.</p>
+<pre class="r"><code>library(wooldridge)
+library(tidyverse)</code></pre>
+<div id="computer-exercise-17.7" class="section level3 tabset tabset-fade tabset-pills">
+<h3>Computer Exercise 17.7</h3>
 <ol style="list-style-type: decimal">
-<li><p>Use the <em>mroz</em> data for this exercise. Using the 428 women who were in the workforce, regress <span class="math inline">\(\log(wage)\)</span> on <span class="math inline">\(educ\)</span> using OLS. Include <span class="math inline">\(exper\)</span>, <span class="math inline">\(exper^2\)</span>, <span class="math inline">\(nwifeinc\)</span>, <span class="math inline">\(age\)</span>, <span class="math inline">\(kidslt6\)</span>, and <span class="math inline">\(kidsge6\)</span> as explanatory variables. Report your estimate on educ and its standard error.</p></li>
-<li><p>Now, estimate the return to education by Heckit, where all exogenous variables show up in the second-stage regression. In other words, the regression is <span class="math inline">\(\log (wage)\)</span> on <span class="math inline">\(educ\)</span>, <span class="math inline">\(exper\)</span>, <span class="math inline">\(exper^2\)</span>, <span class="math inline">\(nwifeinc\)</span>, <span class="math inline">\(age\)</span>, <span class="math inline">\(kidslt6\)</span>, <span class="math inline">\(kidsge6\)</span> and <span class="math inline">\(\hat{\lambda}\)</span>. Compare the estimated return to education and its standard error to that from Question 1. (Hint: We can access the linear fit using <em>[glmobject]$linear.predictors</em>.)</p></li>
+<li><p>Use the <code>mroz</code> data for this exercise. Using the 428 women who were in the workforce, regress <span class="math inline">\(\log(wage)\)</span> on <span class="math inline">\(educ\)</span> using OLS. Include <span class="math inline">\(exper\)</span>, <span class="math inline">\(exper^2\)</span>, <span class="math inline">\(nwifeinc\)</span>, <span class="math inline">\(age\)</span>, <span class="math inline">\(kidslt6\)</span>, and <span class="math inline">\(kidsge6\)</span> as explanatory variables. Report your estimate on educ and its standard error.</p></li>
+<li><p>Now, estimate the return to education by Heckit, where all exogenous variables show up in the second-stage regression. In other words, the regression is <span class="math inline">\(\log (wage)\)</span> on <span class="math inline">\(educ\)</span>, <span class="math inline">\(exper\)</span>, <span class="math inline">\(exper^2\)</span>, <span class="math inline">\(nwifeinc\)</span>, <span class="math inline">\(age\)</span>, <span class="math inline">\(kidslt6\)</span>, <span class="math inline">\(kidsge6\)</span> and <span class="math inline">\(\hat{\lambda}\)</span>. Compare the estimated return to education and its standard error to that from Question 1. (Hint: We can access the linear fit using <code>[glmobject]$linear.predictors</code>.</p></li>
 <li><p>Using only the 428 observations for working women, regress <span class="math inline">\(\hat{\lambda}\)</span> on <span class="math inline">\(educ\)</span>, <span class="math inline">\(exper\)</span>, <span class="math inline">\(exper^2\)</span>, <span class="math inline">\(nwifeinc\)</span>, <span class="math inline">\(age\)</span>, <span class="math inline">\(kidslt6\)</span>, and <span class="math inline">\(kidsge6\)</span>. How big is the <span class="math inline">\(R^2\)</span>? How does this help explain your findings from Question 2?</p></li>
 </ol>
-<div id="question-1" class="section level3">
-<h3>Question 1</h3>
-<pre class="r"><code>library(wooldridge)
-library(tidyverse)
-q1 &lt;- lm(data = mroz, 
+<div id="question-1" class="section level4">
+<h4>Question 1</h4>
+<pre class="r"><code>q1 &lt;- lm(data = mroz, 
          lwage ~ 1 + educ + 
            exper + expersq + nwifeinc + age + kidslt6 + kidsge6)
-coefficients(summary(q1))[,1:3]</code></pre>
-<pre><code>##                  Estimate   Std. Error    t value
-## (Intercept) -0.3579971778 0.3182963232 -1.1247292
-## educ         0.0998843666 0.0150974628  6.6159704
-## exper        0.0407097453 0.0133722574  3.0443435
-## expersq     -0.0007473266 0.0004017766 -1.8600548
-## nwifeinc     0.0056942197 0.0033195239  1.7153724
-## age         -0.0035203943 0.0054145218 -0.6501764
-## kidslt6     -0.0558725273 0.0886034363 -0.6305910
-## kidsge6     -0.0176484457 0.0278909878 -0.6327652</code></pre>
+tab_model(q1, show.ci = FALSE, show.stat = TRUE, show.se = TRUE,
+          show.p = FALSE, p.style = &quot;stars&quot;)</code></pre>
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+lwage
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+std. Error
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Statistic
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+(Intercept)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.36 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.32
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-1.12
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+educ
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.10 <sup>***</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.02
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+6.62
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+exper
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.04 <sup>**</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.01
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+3.04
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+expersq
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.00 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.00
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-1.86
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+nwifeinc
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.01 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.00
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+1.72
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+age
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.00 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.01
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.65
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+kidslt6
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.06 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.09
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.63
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+kidsge6
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.02 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.03
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.63
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+428
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+R<sup>2</sup> / R<sup>2</sup> adjusted
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.164 / 0.150
+</td>
+</tr>
+<tr>
+<td colspan="4" style="font-style:italic; border-top:double black; text-align:right;">
+<ul>
+<li>p&lt;0.05   ** p&lt;0.01   *** p&lt;0.001
+</td>
+</tr></li>
+</ul>
+</table>
+<hr />
 </div>
-<div id="question-2" class="section level3">
-<h3>Question 2</h3>
+<div id="question-2" class="section level4">
+<h4>Question 2</h4>
 <pre class="r"><code># Step 1
 mroz$s &lt;- !is.na(mroz$lwage) %&gt;% as.numeric()
 step1 &lt;- glm(data = mroz,
@@ -409,48 +648,199 @@ mroz$imr &lt;- dnorm(step1$linear.predictors) / pnorm(step1$linear.predictors)
 # Step 2
 step2 &lt;- lm(data = mroz[mroz$s==1,],
             lwage ~ 1 + educ + 
-           exper + expersq + nwifeinc + age + kidslt6 + kidsge6 + imr)</code></pre>
-<pre class="r"><code>summary(step2)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = lwage ~ 1 + educ + exper + expersq + nwifeinc + 
-##     age + kidslt6 + kidsge6 + imr, data = mroz[mroz$s == 1, ])
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -3.10089 -0.31786  0.04565  0.38678  2.35684 
-## 
-## Coefficients:
-##               Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) -0.5602842  0.4573778  -1.225 0.221266    
-## educ         0.1187169  0.0340884   3.483 0.000549 ***
-## exper        0.0598356  0.0337955   1.771 0.077368 .  
-## expersq     -0.0010523  0.0006376  -1.650 0.099601 .  
-## nwifeinc     0.0038434  0.0044782   0.858 0.391249    
-## age         -0.0111580  0.0135253  -0.825 0.409860    
-## kidslt6     -0.1880439  0.2320653  -0.810 0.418224    
-## kidsge6     -0.0122254  0.0292658  -0.418 0.676353    
-## imr          0.2884618  0.4680506   0.616 0.538028    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.6672 on 419 degrees of freedom
-## Multiple R-squared:  0.1649, Adjusted R-squared:  0.1489 
-## F-statistic: 10.34 on 8 and 419 DF,  p-value: 3.089e-13</code></pre>
+           exper + expersq + nwifeinc + age + kidslt6 + kidsge6 + imr)
+tab_model(step2, show.ci = FALSE, show.stat = TRUE, show.se = TRUE,
+          show.p = FALSE, p.style = &quot;stars&quot;)</code></pre>
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+lwage
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Estimates
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+std. Error
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Statistic
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+(Intercept)
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.56 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.46
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-1.22
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+educ
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.12 <sup>***</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.03
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+3.48
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+exper
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.06 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.03
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+1.77
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+expersq
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.00 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.00
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-1.65
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+nwifeinc
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.00 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.00
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.86
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+age
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.01 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.01
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.82
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+kidslt6
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.19 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.23
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.81
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+kidsge6
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.01 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.03
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+-0.42
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+imr
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.29 <sup></sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.47
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+0.62
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
+428
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+R<sup>2</sup> / R<sup>2</sup> adjusted
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
+0.165 / 0.149
+</td>
+</tr>
+<tr>
+<td colspan="4" style="font-style:italic; border-top:double black; text-align:right;">
+<ul>
+<li>p&lt;0.05   ** p&lt;0.01   *** p&lt;0.001
+</td>
+</tr></li>
+</ul>
+</table>
 <p>After sample selection correction, the return to education becomes larger but standard error is twice as large.</p>
+<hr />
 </div>
-<div id="question-3" class="section level3">
-<h3>Question 3</h3>
+<div id="question-3" class="section level4">
+<h4>Question 3</h4>
 <pre class="r"><code>q3 &lt;- lm(data = mroz[mroz$s==1,],
          imr ~ 1 + educ + exper + expersq + nwifeinc + age + kidslt6+kidsge6)
 summary(q3)$r.squared</code></pre>
 <pre><code>## [1] 0.9620133</code></pre>
 <p>There is substantial multicollinearity in the second stage regression. Thus, large standard errors.</p>
+<hr />
+</div>
 </div>
 </div>
 <div id="automatic-heckit" class="section level2">
 <h2>Automatic Heckit</h2>
-<p>Instead of doing Heckit by hand, we can also use the <em>heckit()</em> function from <em>sampleSelection</em> package.</p>
+<p>Instead of doing Heckit by hand, we can also use the <code>heckit()</code> function from <code>sampleSelection</code> package.</p>
 <pre class="r"><code>library(sampleSelection)
 mroz.heckit &lt;- mroz %&gt;% 
   heckit(selection = s ~ educ + exper + expersq + nwifeinc +
@@ -491,6 +881,7 @@ summary(mroz.heckit)</code></pre>
 ## rho             0.4183         NA      NA       NA
 ## --------------------------------------------</code></pre>
 <p>The estimates are the same as the ones we obtained from doing heckit by hand.</p>
+<hr />
 </div>
 <div id="issues-about-inverse-mills-ratio" class="section level2">
 <h2>Issues about Inverse Mill’s Ratio</h2>
@@ -522,6 +913,8 @@ summary(mroz.heckit)</code></pre>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -554,6 +947,32 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

@@ -1,6 +1,13 @@
 ---
 title: "RESET"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
 ---
+
+## Review of RESET
 
 Regression Specification Error Test (RESET) has been used to detect general functional form misspecifications.
 
@@ -15,8 +22,15 @@ y = \beta_0 + \beta_1x_1 + ... + \beta_k x_k + \delta_1\hat{y}^2 + \delta_2\hat{
 $$
 Third, test the joint significance of $\delta_1$ and $\delta_2$.
 
+For this exercise, load the following packages.
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
+library(wooldridge)
+library(tidyverse)
+library(car)
+```
+
 ## Example 9.2 Housing Price Equation
-Use *hprice1* data from the Wooldridge package. Consider two models for housing prices.
+Use ```hprice1``` data from the ```Wooldridge``` package. Consider two models for housing prices.
 $$
 price = \beta_0 + \beta_1 lotsize + \beta_2 sqrft + \beta_2 bdrms + u
 $$
@@ -28,40 +42,55 @@ $$
 We want to compare whether the level-level model or the log-log model is preferred.
 
 ```{r, echo=TRUE, warning=FALSE, message=FALSE}
-library(wooldridge)
-library(car)
-library(tidyverse)
 hprice <- hprice1
+
+# Step 1
 levelmod <- lm(data = hprice,price ~ 1 + lotsize + sqrft + bdrms)
 hprice$predsq <- levelmod$fitted.values^2
 hprice$predcb <- levelmod$fitted.values^3
 
-levelmod_reset <- lm(data = hprice,price ~ 1 + lotsize + sqrft + bdrms + predsq +predcb)
+# Step 2
+levelmod_reset <- lm(data = hprice,
+                     price ~ 1 + lotsize + sqrft + bdrms + predsq +predcb)
+
+# Step 3
 linearHypothesis(levelmod_reset,c("predsq=0", "predcb=0"))
 ```
 
-Repeat the same exercise for the log model. Which model is preferred?
+Repeat the same exercise for the log model. For the log model, I write a simple function for RESET as follows. This function takes an ```lmobject``` as input. An advantage of writing a function is that we don't have to copy-paste all the codes. This point will be demonstrated below.
 
 ```{r, echo=FALSE}
-logmod <- lm(data = hprice,
-             lprice ~ 1 + llotsize + lsqrft + bdrms)
 myresettest <- function(lmobj){
+  # Extract data used from the lmobject
   x <- lmobj$model[,-1] %>% as.matrix()
   y <- lmobj$model[,1] %>% as.matrix()
 
+  # Step 1
   predsq <- lmobj$fitted.values^2
   predcb <- lmobj$fitted.values^3
 
   x <- cbind(x, predsq, predcb) %>% as.matrix()
 
+  # Step 2
   resetmod <- lm(y~x)
 
+  # Step 3
   linearHypothesis(model = resetmod,
                    hypothesis.matrix = c("xpredsq=0", "xpredcb=0"),
                    singular.ok = TRUE)
 }
+```
 
+Now apply this function to the log model.
+```{r}
+logmod <- lm(data = hprice,
+             lprice ~ 1 + llotsize + lsqrft + bdrms)
 myresettest(logmod)
+```
+
+We can also apply the function to the level model.
+```{r}
+myresettest(levelmod)
 ```
 
 For the level-level model, since p-value is statistically significant at 5% significance level, we reject the null hypothesis that $\delta_1 =0, \delta_2 = 0$. Thus, there is evidence for functional form misspecification.
